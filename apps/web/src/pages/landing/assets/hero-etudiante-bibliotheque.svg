@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <!-- IMAGE DE SUBSTITUTION (ScolaRead) : étudiante travaillant sur un ordinateur dans une bibliothèque. À remplacer par la photo définitive (4:5). -->
+  <defs>
+    <linearGradient id="mur" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b3a22"/>
+      <stop offset="1" stop-color="#2f1e12"/>
+    </linearGradient>
+    <linearGradient id="fenetre" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff4d6"/>
+      <stop offset="1" stop-color="#f6c97a"/>
+    </linearGradient>
+    <radialGradient id="lumiere" cx="0.78" cy="0.25" r="0.7">
+      <stop offset="0" stop-color="#ffe7ae" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#ffe7ae" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bureau" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b98a5e"/>
+      <stop offset="1" stop-color="#8a6240"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#mur)"/>
+  <!-- Fenêtre arquée -->
+  <path d="M470 120 Q600 20 730 120 V560 H470 Z" fill="url(#fenetre)"/>
+  <path d="M600 60 V560 M470 300 H730 M470 430 H730" stroke="#6b4a2e" stroke-width="10"/>
+  <!-- Étagères -->
+  <g fill="#3d2716">
+    <rect x="30" y="80" width="380" height="16"/>
+    <rect x="30" y="250" width="380" height="16"/>
+    <rect x="30" y="420" width="380" height="16"/>
+  </g>
+  <g>
+    <rect x="45" y="110" width="26" height="140" fill="#9c3b2e"/>
+    <rect x="75" y="125" width="22" height="125" fill="#d9a441"/>
+    <rect x="100" y="105" width="30" height="145" fill="#2f4f7f"/>
+    <rect x="134" y="118" width="20" height="132" fill="#6c8a4b"/>
+    <rect x="158" y="100" width="28" height="150" fill="#c46a3a"/>
+    <rect x="190" y="130" width="24" height="120" fill="#e2d2b0"/>
+    <rect x="218" y="112" width="30" height="138" fill="#7d3c5a"/>
+    <rect x="252" y="122" width="22" height="128" fill="#3c6e71"/>
+    <rect x="278" y="104" width="28" height="146" fill="#b5523b"/>
+    <rect x="310" y="126" width="22" height="124" fill="#d8b860"/>
+    <rect x="336" y="110" width="30" height="140" fill="#284b63"/>
+    <rect x="45" y="282" width="30" height="138" fill="#5a7d3c"/>
+    <rect x="80" y="300" width="22" height="120" fill="#c9a24b"/>
+    <rect x="106" y="290" width="28" height="130" fill="#8e3b2f"/>
+    <rect x="138" y="276" width="24" height="144" fill="#2e5e8a"/>
+    <rect x="166" y="296" width="30" height="124" fill="#e0cfa8"/>
+    <rect x="200" y="284" width="22" height="136" fill="#a0522d"/>
+    <rect x="226" y="292" width="28" height="128" fill="#4a6b52"/>
+    <rect x="258" y="278" width="24" height="142" fill="#c7743c"/>
+    <rect x="286" y="300" width="30" height="120" fill="#3e4f7a"/>
+    <rect x="320" y="288" width="24" height="132" fill="#a63d40"/>
+    <rect x="348" y="296" width="26" height="124" fill="#d4b05c"/>
+  </g>
+  <rect width="800" height="1000" fill="url(#lumiere)"/>
+  <!-- Étudiante (silhouette) -->
+  <g>
+    <path d="M250 1000 C250 760 300 640 420 630 C540 640 590 760 590 1000 Z" fill="#3f6fb6"/>
+    <path d="M330 690 C360 720 480 720 510 690 L500 760 C470 780 370 780 340 760 Z" fill="#5c8bd1" opacity="0.6"/>
+    <rect x="395" y="560" width="50" height="80" rx="20" fill="#6b4226"/>
+    <circle cx="420" cy="500" r="95" fill="#2a1a12"/>
+    <circle cx="350" cy="450" r="55" fill="#2a1a12"/>
+    <circle cx="495" cy="445" r="58" fill="#2a1a12"/>
+    <circle cx="420" cy="410" r="62" fill="#2a1a12"/>
+    <ellipse cx="420" cy="525" rx="62" ry="74" fill="#7a4a2b"/>
+    <path d="M392 560 Q420 580 448 560" stroke="#4a2a18" stroke-width="5" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- Bureau -->
+  <rect x="0" y="800" width="800" height="200" fill="url(#bureau)"/>
+  <rect x="0" y="800" width="800" height="10" fill="#d1a473"/>
+  <!-- Ordinateur portable -->
+  <path d="M440 650 H700 L720 820 H460 Z" fill="#cfd5dd"/>
+  <path d="M452 662 H690 L706 805 H470 Z" fill="#1d2b44"/>
+  <rect x="490" y="690" width="70" height="40" rx="4" fill="#3b82f6" opacity="0.8"/>
+  <circle cx="620" cy="720" r="34" fill="none" stroke="#60a5fa" stroke-width="12"/>
+  <path d="M620 686 A34 34 0 0 1 654 720" fill="none" stroke="#f59e0b" stroke-width="12"/>
+  <rect x="490" y="750" width="180" height="8" rx="4" fill="#64748b"/>
+  <rect x="490" y="768" width="120" height="8" rx="4" fill="#64748b"/>
+  <path d="M430 820 H760 L740 850 H450 Z" fill="#aab3bf"/>
+  <!-- Cahier et tasse -->
+  <path d="M90 860 L330 840 L345 930 L105 955 Z" fill="#f8f4ea"/>
+  <path d="M120 875 L310 860 M125 895 L315 880 M128 915 L318 900" stroke="#c9c2b0" stroke-width="4"/>
+  <rect x="640" y="870" width="70" height="80" rx="10" fill="#f3efe6"/>
+  <path d="M710 890 Q745 905 710 925" stroke="#f3efe6" stroke-width="10" fill="none"/>
+</svg>

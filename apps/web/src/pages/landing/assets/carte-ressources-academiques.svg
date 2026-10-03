@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360">
+  <!-- IMAGE DE SUBSTITUTION (ScolaRead) : pile de manuels sur un bureau de bibliothèque. À remplacer par la photo définitive (16:9). -->
+  <defs>
+    <linearGradient id="fond" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a2516"/>
+      <stop offset="1" stop-color="#1e130b"/>
+    </linearGradient>
+    <radialGradient id="lampe" cx="0.25" cy="0.35" r="0.55">
+      <stop offset="0" stop-color="#ffd27a" stop-opacity="0.65"/>
+      <stop offset="1" stop-color="#ffd27a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#fond)"/>
+  <g opacity="0.55">
+    <rect x="380" y="20" width="16" height="90" fill="#7a3b2e"/><rect x="400" y="30" width="12" height="80" fill="#c9a24b"/>
+    <rect x="416" y="24" width="18" height="86" fill="#2f4f7f"/><rect x="438" y="34" width="14" height="76" fill="#4a6b52"/>
+    <rect x="456" y="22" width="18" height="88" fill="#a63d40"/><rect x="478" y="30" width="14" height="80" fill="#d4b05c"/>
+    <rect x="496" y="26" width="18" height="84" fill="#2e5e8a"/><rect x="518" y="34" width="12" height="76" fill="#8e3b2f"/>
+    <rect x="370" y="110" width="250" height="8" fill="#5a3a22"/>
+  </g>
+  <rect width="640" height="360" fill="url(#lampe)"/>
+  <!-- Lampe -->
+  <path d="M110 70 L190 70 L210 120 L90 120 Z" fill="#1f6f5c"/>
+  <rect x="146" y="120" width="8" height="140" fill="#b58a3c"/>
+  <ellipse cx="150" cy="262" rx="40" ry="8" fill="#b58a3c"/>
+  <!-- Bureau -->
+  <rect x="0" y="262" width="640" height="98" fill="#6b4226"/>
+  <rect x="0" y="262" width="640" height="6" fill="#8a5a36"/>
+  <!-- Pile de livres -->
+  <g>
+    <rect x="250" y="236" width="230" height="28" rx="3" fill="#2f4f7f"/>
+    <rect x="262" y="208" width="210" height="28" rx="3" fill="#7a3b2e"/>
+    <rect x="244" y="180" width="236" height="28" rx="3" fill="#1f5e4a"/>
+    <rect x="258" y="152" width="214" height="28" rx="3" fill="#2f2f4f"/>
+    <rect x="250" y="124" width="226" height="28" rx="3" fill="#8e3b2f"/>
+    <rect x="266" y="96" width="200" height="28" rx="3" fill="#1e3a8a"/>
+    <g fill="#e8c873">
+      <rect x="290" y="247" width="120" height="5" rx="2"/><rect x="300" y="219" width="110" height="5" rx="2"/>
+      <rect x="290" y="191" width="130" height="5" rx="2"/><rect x="300" y="163" width="110" height="5" rx="2"/>
+      <rect x="292" y="135" width="124" height="5" rx="2"/><rect x="300" y="107" width="100" height="5" rx="2"/>
+    </g>
+  </g>
+  <!-- Lunettes -->
+  <circle cx="540" cy="300" r="16" fill="none" stroke="#d1d5db" stroke-width="3"/>
+  <circle cx="580" cy="300" r="16" fill="none" stroke="#d1d5db" stroke-width="3"/>
+  <path d="M556 300 H564" stroke="#d1d5db" stroke-width="3"/>
+</svg>
