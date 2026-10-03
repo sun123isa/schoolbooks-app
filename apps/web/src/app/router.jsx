@@ -18,7 +18,7 @@ export const router = createBrowserRouter([
     // Gestion globale des erreurs de rendu : une page qui plante n'emporte pas l'application.
     errorElement: <RouteErrorPage />,
     children: [
-      { path: ROUTES.accueil, element: <LandingPage /> }, // Jean Baptiste
+      { path: ROUTES.accueil, element: <LandingPage />, handle: { pleineLargeur: true } }, // Jean Baptiste
       { path: ROUTES.recherche, element: <RecherchePage /> }, // Graciel
       { path: ROUTES.ressource, element: <RessourcePage /> }, // Karene
       { path: '*', element: <NotFoundPage /> }
