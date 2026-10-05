@@ -3,11 +3,13 @@
 // Responsable : HIRWA Jean Baptiste (Lead Dev) — relecture : Salem KONGOLO
 // Ordinateur : logo | navigation centrale | recherche + bouton principal.
 // Tablette et mobile (< 1080 px) : logo + bouton menu qui déplie la navigation.
+// Une ombre apparaît dès que la page défile (useDefilement).
 // =============================================================================
 import { useEffect, useId, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { ArrowRight, Menu, Search, X } from 'lucide-react';
+import { ArrowRightIcon, ListIcon, MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react';
 import { cheminRecherche } from '../../app/routes.js';
+import { useDefilement } from '../hooks/useMouvement.js';
 import { Button } from '../components/ui/Button.jsx';
 import { InactiveLink } from '../components/ui/InactiveLink.jsx';
 import { Logo } from '../components/ui/Logo.jsx';
@@ -32,6 +34,7 @@ function LienNavigation({ item, onNavigate }) {
 export function Header() {
   const [menuOuvert, setMenuOuvert] = useState(false);
   const idMenu = useId();
+  const defile = useDefilement();
   const fermer = () => setMenuOuvert(false);
 
   // Échap ferme le menu mobile.
@@ -43,7 +46,7 @@ export function Header() {
   }, [menuOuvert]);
 
   return (
-    <header className={`header ${menuOuvert ? 'header--ouvert' : ''}`}>
+    <header className={`header ${menuOuvert ? 'header--ouvert' : ''} ${defile ? 'header--defile' : ''}`}>
       <div className="container header__inner">
         <Logo />
 
@@ -55,7 +58,7 @@ export function Header() {
           aria-label={menuOuvert ? ENTETE.fermerMenu : ENTETE.ouvrirMenu}
           onClick={() => setMenuOuvert((ouvert) => !ouvert)}
         >
-          {menuOuvert ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+          {menuOuvert ? <XIcon weight="bold" aria-hidden="true" /> : <ListIcon weight="bold" aria-hidden="true" />}
         </button>
 
         <div className="header__panel" id={idMenu}>
@@ -70,9 +73,9 @@ export function Header() {
           </nav>
           <div className="header__actions">
             <Link to={cheminRecherche()} className="header__icon-btn" aria-label={ENTETE.rechercher} onClick={fermer}>
-              <Search aria-hidden="true" />
+              <MagnifyingGlassIcon weight="bold" aria-hidden="true" />
             </Link>
-            <Button to={cheminRecherche()} size="sm" iconRight={ArrowRight} onClick={fermer}>
+            <Button to={cheminRecherche()} size="sm" iconRight={ArrowRightIcon} onClick={fermer}>
               {ENTETE.explorer}
             </Button>
           </div>

@@ -27,7 +27,42 @@
 }
 
 .btn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+}
+
+.btn__icon--right {
+  transition: transform var(--transition-base);
+}
+
+.btn:hover .btn__icon--right {
+  transform: translateX(4px);
+}
+
+/* Reflet lumineux qui traverse les boutons pleins au survol. */
+.btn--primary,
+.btn--light,
+.btn--accent {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn--primary::after,
+.btn--light::after,
+.btn--accent::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--reflet);
+  transform: translateX(-120%);
+  transition: transform 700ms var(--ease-out);
+}
+
+.btn--primary:hover::after,
+.btn--light:hover::after,
+.btn--accent:hover::after {
+  transform: translateX(120%);
 }
 
 .btn:active {
@@ -219,13 +254,70 @@
 /* --- Reveal ------------------------------------------------------------------------ */
 .reveal--cache {
   opacity: 0;
-  transform: translateY(18px);
+}
+
+.reveal--cache.reveal--monter {
+  transform: translateY(28px);
+}
+
+.reveal--cache.reveal--gauche {
+  transform: translateX(-40px);
+}
+
+.reveal--cache.reveal--droite {
+  transform: translateX(40px);
+}
+
+.reveal--cache.reveal--zoom {
+  transform: scale(0.92);
+}
+
+.reveal--cache.reveal--devoiler {
+  opacity: 1;
+  clip-path: inset(0 0 100% 0 round var(--radius-xl));
 }
 
 .reveal--visible {
   opacity: 1;
   transform: none;
   transition:
-    opacity 600ms ease var(--reveal-delay, 0ms),
-    transform 600ms ease var(--reveal-delay, 0ms);
+    opacity 700ms var(--ease-out) var(--reveal-delay, 0ms),
+    transform 800ms var(--ease-out) var(--reveal-delay, 0ms);
+}
+
+/* Le rideau ne masque que pendant l'animation : rien n'est rogné ensuite. */
+.reveal--visible.reveal--devoiler {
+  animation: rideau 1100ms var(--ease-out) var(--reveal-delay, 0ms) backwards;
+}
+
+@keyframes rideau {
+  from {
+    clip-path: inset(0 0 100% 0 round var(--radius-xl));
+  }
+  to {
+    clip-path: inset(0 0 0 0 round var(--radius-xl));
+  }
+}
+
+/* Enfants animés en cascade une fois le parent visible :
+   <Reveal className="cascade"><p style={{ '--i': 0 }}>…</p><p style={{ '--i': 1 }}>…</p></Reveal> */
+.reveal--cache.cascade > * {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.reveal--visible.cascade > * {
+  animation: entree-monter 700ms var(--ease-out) both;
+  animation-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * 110ms);
+}
+
+@keyframes entree-monter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }

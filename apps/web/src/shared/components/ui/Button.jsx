@@ -3,8 +3,9 @@
 // Responsable : HIRWA Jean Baptiste (Lead Dev) — relecture : Salem KONGOLO
 // Variantes : primary (vert plein), outline (contour), accent (vert clair plein),
 //            light (blanc, sur fond sombre), ghost-light (contour blanc, sur fond sombre).
-// Tailles : md (par défaut), sm. Icônes lucide-react via iconLeft / iconRight.
-// Usage : <Button to={cheminRecherche()} iconLeft={Search}>Trouver</Button>
+// Tailles : md (par défaut), sm. Icônes Phosphor via iconLeft / iconRight
+// (graisse « bold » pour rester lisibles à petite taille).
+// Usage : <Button to={cheminRecherche()} iconLeft={MagnifyingGlassIcon}>Trouver</Button>
 // =============================================================================
 import { Link } from 'react-router-dom';
 import './ui.css';
@@ -22,9 +23,9 @@ export function Button({
   const classes = `btn btn--${variant} btn--${size} ${className}`.trim();
   const contenu = (
     <>
-      {IconLeft && <IconLeft className="btn__icon" aria-hidden="true" />}
+      {IconLeft && <IconLeft className="btn__icon" weight="bold" aria-hidden="true" />}
       <span>{children}</span>
-      {IconRight && <IconRight className="btn__icon btn__icon--right" aria-hidden="true" />}
+      {IconRight && <IconRight className="btn__icon btn__icon--right" weight="bold" aria-hidden="true" />}
     </>
   );
 

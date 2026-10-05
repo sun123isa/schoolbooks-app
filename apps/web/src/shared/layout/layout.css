@@ -31,6 +31,11 @@
   z-index: 50;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
+  transition: box-shadow var(--transition-base);
+}
+
+.header--defile {
+  box-shadow: var(--shadow-md);
 }
 
 .header__inner {
@@ -81,7 +86,7 @@ a.header__nav-link:hover {
   font-weight: 700;
 }
 
-.header__nav-link.active::after {
+.header__nav-link::after {
   content: '';
   position: absolute;
   left: 0;
@@ -90,6 +95,14 @@ a.header__nav-link:hover {
   height: 2px;
   border-radius: 2px;
   background: var(--color-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-base);
+}
+
+a.header__nav-link:hover::after,
+.header__nav-link.active::after {
+  transform: scaleX(1);
 }
 
 .header__actions {
@@ -111,8 +124,13 @@ a.header__nav-link:hover {
 }
 
 .header__icon-btn svg {
-  width: 19px;
-  height: 19px;
+  width: 20px;
+  height: 20px;
+  transition: transform var(--transition-base) var(--ease-spring);
+}
+
+a.header__icon-btn:hover svg {
+  transform: scale(1.15) rotate(-8deg);
 }
 
 a.header__icon-btn:hover {
@@ -171,9 +189,13 @@ a.header__icon-btn:hover {
     font-size: var(--text-base);
   }
 
-  .header__nav-link.active::after {
+  .header__nav-link::after {
     right: auto;
     width: 32px;
+  }
+
+  .header--ouvert .header__panel {
+    animation: menu-deplier 260ms var(--ease-out);
   }
 
   .header__actions {
@@ -183,6 +205,13 @@ a.header__icon-btn:hover {
 
   .header__actions .btn {
     flex: 1;
+  }
+}
+
+@keyframes menu-deplier {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
   }
 }
 
@@ -280,12 +309,124 @@ a.footer__link:hover {
 
 /* --- Composants d'état communs (StatusMessages.jsx) --------------------------- */
 .etat {
-  padding: 24px;
-  border: 1px dashed var(--color-border-strong);
-  border-radius: var(--radius-md);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 22px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  animation: entree-monter 400ms var(--ease-out) both;
 }
 
+.etat__titre {
+  font-weight: 600;
+}
+
+.etat__texte {
+  color: var(--color-text-muted);
+}
+
+.etat__action {
+  margin-top: 14px;
+}
+
+/* Chargement : pastille qui tourne. */
+.etat--chargement {
+  align-items: center;
+  color: var(--color-text-muted);
+}
+
+.etat__spinner {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--color-primary-tint);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: tourner 800ms linear infinite;
+}
+
+/* Erreur. */
 .etat--erreur {
-  border-color: var(--color-danger-strong);
+  border-color: var(--color-danger-border);
+  background: var(--color-danger-soft);
+}
+
+.etat--erreur .etat__titre {
   color: var(--color-danger-strong);
+}
+
+.etat__icone {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  color: var(--color-danger-strong);
+}
+
+/* Aucun résultat : centré, avec une pastille illustrée. */
+.etat--vide {
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 24px;
+  border-style: dashed;
+  border-color: var(--color-border-strong);
+  text-align: center;
+}
+
+.etat__pastille {
+  display: inline-grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  animation: flotter-doux 4s ease-in-out infinite;
+}
+
+.etat__pastille svg {
+  width: 36px;
+  height: 36px;
+}
+
+.etat--vide .etat__titre {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.etat--vide .etat__texte {
+  max-width: 460px;
+}
+
+@keyframes tourner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes flotter-doux {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+/* --- Page 404 ------------------------------------------------------------------- */
+.page-404 {
+  padding-block: 48px;
+}
+
+.page-404__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
 }

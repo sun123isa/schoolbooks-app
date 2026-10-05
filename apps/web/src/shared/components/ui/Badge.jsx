@@ -9,7 +9,7 @@ import './ui.css';
 export function Badge({ tone = 'neutral', icon: Icon, uppercase = false, className = '', children }) {
   return (
     <span className={`badge badge--${tone} ${uppercase ? 'badge--upper' : ''} ${className}`.trim()}>
-      {Icon && <Icon className="badge__icon" aria-hidden="true" />}
+      {Icon && <Icon className="badge__icon" weight="bold" aria-hidden="true" />}
       {children}
     </span>
   );
