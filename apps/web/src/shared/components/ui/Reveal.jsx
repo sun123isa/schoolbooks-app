@@ -29,7 +29,9 @@ export function Reveal({ as: Element = 'div', effet = 'monter', delay = 0, class
           observer.disconnect();
         }
       },
-      { rootMargin: '0px 0px -8% 0px', threshold: 0.12 }
+      // Zone étendue vers le haut : un bloc déjà dépassé (défilement rapide,
+      // saut vers une ancre) compte comme vu et s'affiche aussitôt.
+      { rootMargin: '100000px 0px -8% 0px', threshold: 0.12 }
     );
     observer.observe(ref.current);
     return () => observer.disconnect();

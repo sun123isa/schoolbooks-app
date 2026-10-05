@@ -11,14 +11,15 @@ import { ROUTES, cheminRecherche } from '../../app/routes.js';
 export const ANCRE_A_PROPOS = 'a-propos';
 
 // `page: true` : lien vers une page (état actif souligné). Les autres liens
-// pointent vers une recherche pré-filtrée ou une ancre et ne sont jamais « actifs ».
+// pointent vers une recherche pré-filtrée et ne sont jamais « actifs ».
+// « À propos » n'est plus dans la barre : il reste accessible depuis le hero et
+// le pied de page.
 export const NAVIGATION = [
   { libelle: 'Accueil', to: ROUTES.accueil, end: true, page: true },
   { libelle: 'Ressources', to: ROUTES.recherche, page: true },
   { libelle: "Sujets d'examens", to: cheminRecherche({ type: 'sujet-examen' }) },
   { libelle: 'Livres', to: cheminRecherche({ type: 'livre' }) },
-  { libelle: 'Supports de cours', to: cheminRecherche({ type: 'cours' }) },
-  { libelle: 'À propos', to: `${ROUTES.accueil}#${ANCRE_A_PROPOS}` }
+  { libelle: 'Supports de cours', to: cheminRecherche({ type: 'cours' }) }
 ];
 
 export const ENTETE = {

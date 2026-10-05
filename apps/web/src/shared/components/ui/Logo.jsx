@@ -24,7 +24,7 @@ export function Logo({ clair = false, className = '' }) {
     <Link
       to={ROUTES.accueil}
       className={`logo ${clair ? 'logo--clair' : ''} ${className}`.trim()}
-      aria-label="ScolaRead — accueil"
+      aria-label="ScolaRead, accueil"
     >
       <LogoMark />
       <span className="logo__text">
