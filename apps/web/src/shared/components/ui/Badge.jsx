@@ -1,8 +1,8 @@
 // =============================================================================
 // Socle frontend — badge / pastille en forme de pilule
 // Responsable : HIRWA Jean Baptiste (Lead Dev) — relecture : Salem KONGOLO
-// Tons : neutral (gris), primary (bleu plein), accent (ambre clair),
-//        accent-solid (ambre plein), success (vert clair), outline (blanc bordé).
+// Tons : neutral (gris), primary (vert plein), accent (vert clair),
+//        accent-solid (vert clair plein), success (vert clair), outline (blanc bordé).
 // =============================================================================
 import './ui.css';
 

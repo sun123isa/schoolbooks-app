@@ -54,7 +54,7 @@
 .btn--primary {
   background: var(--color-primary);
   color: var(--color-on-primary);
-  box-shadow: 0 6px 16px -8px rgba(30, 58, 138, 0.7);
+  box-shadow: var(--shadow-primary);
 }
 
 .btn--primary:hover {
@@ -75,12 +75,38 @@
 
 .btn--accent {
   background: var(--color-accent);
-  color: var(--color-text);
-  box-shadow: 0 10px 24px -10px rgba(245, 158, 11, 0.8);
+  color: var(--color-primary-darker);
 }
 
 .btn--accent:hover {
   background: var(--color-accent-hover);
+}
+
+/* Sur fond sombre ou photo : contour blanc transparent. */
+.btn--ghost-light {
+  background: transparent;
+  border-color: var(--color-on-primary-muted);
+  color: var(--color-on-primary);
+}
+
+.btn--ghost-light:hover {
+  border-color: var(--color-on-primary);
+  background: var(--color-hover-on-dark);
+}
+
+/* Sur fond sombre : bouton blanc, texte vert. */
+.btn--light {
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+
+.btn--light:hover {
+  background: var(--color-primary-soft);
+}
+
+.btn--ghost-light:focus-visible,
+.btn--light:focus-visible {
+  outline-color: var(--color-focus-on-dark);
 }
 
 /* --- Badge -------------------------------------------------------------------- */
@@ -153,8 +179,8 @@
 }
 
 .logo__mark {
-  width: 36px;
-  height: 29px;
+  width: 34px;
+  height: 38px;
 }
 
 .logo__text {
@@ -165,23 +191,29 @@
 
 .logo__name {
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: 1.1875rem;
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   color: var(--color-primary);
-}
-
-.logo__name-accent {
-  color: var(--color-accent-large);
 }
 
 .logo__tagline {
-  margin-top: 3px;
+  margin-top: 4px;
   font-size: 0.5625rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--color-text-muted);
+}
+
+/* Variante claire (pied de page sur fond vert foncé). */
+.logo--clair .logo__name {
+  color: var(--color-on-primary);
+}
+
+.logo--clair .logo__tagline {
+  color: var(--color-on-primary-muted);
 }
 
 /* --- Reveal ------------------------------------------------------------------------ */

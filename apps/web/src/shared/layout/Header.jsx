@@ -1,55 +1,31 @@
 // =============================================================================
 // Socle frontend — en-tête fixe et navigation principale
 // Responsable : HIRWA Jean Baptiste (Lead Dev) — relecture : Salem KONGOLO
-// Ordinateur : logo | navigation centrale | actions. Mobile (< 960 px) : logo +
-// bouton menu qui déplie la navigation et les actions.
-// HORS MVP affichés sans fonctionnalité : icône favoris, « Se connecter ».
+// Ordinateur : logo | navigation centrale | recherche + bouton principal.
+// Tablette et mobile (< 1080 px) : logo + bouton menu qui déplie la navigation.
 // =============================================================================
 import { useEffect, useId, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { ArrowRight, Bookmark, Menu, Search, X } from 'lucide-react';
+import { ArrowRight, Menu, Search, X } from 'lucide-react';
 import { cheminRecherche } from '../../app/routes.js';
 import { Button } from '../components/ui/Button.jsx';
 import { InactiveLink } from '../components/ui/InactiveLink.jsx';
 import { Logo } from '../components/ui/Logo.jsx';
 import { ENTETE, NAVIGATION } from './layout.content.js';
 
-function Navigation({ onNavigate }) {
+function LienNavigation({ item, onNavigate }) {
+  if (!item.to) return <InactiveLink className="header__nav-link">{item.libelle}</InactiveLink>;
+  if (item.page) {
+    return (
+      <NavLink to={item.to} end={item.end} className="header__nav-link" onClick={onNavigate}>
+        {item.libelle}
+      </NavLink>
+    );
+  }
   return (
-    <ul className="header__nav-list">
-      {NAVIGATION.map((item) => (
-        <li key={item.libelle}>
-          {item.to ? (
-            <NavLink to={item.to} end={item.end} className="header__nav-link" onClick={onNavigate}>
-              {item.libelle}
-            </NavLink>
-          ) : (
-            <InactiveLink className="header__nav-link">{item.libelle}</InactiveLink>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function Actions({ onNavigate }) {
-  return (
-    <div className="header__actions">
-      <Link to={cheminRecherche()} className="header__icon-btn" aria-label={ENTETE.rechercher} onClick={onNavigate}>
-        <Search aria-hidden="true" />
-      </Link>
-      {/* HORS MVP — favoris : icône affichée, sans fonctionnalité. */}
-      <InactiveLink className="header__icon-btn" raison={ENTETE.favoris}>
-        <Bookmark aria-hidden="true" />
-        <span className="visually-hidden">{ENTETE.favoris}</span>
-      </InactiveLink>
-      <span className="header__separator" aria-hidden="true" />
-      {/* HORS MVP — connexion : pas de comptes au MVP. */}
-      <InactiveLink className="header__login">{ENTETE.connexion}</InactiveLink>
-      <Button to={cheminRecherche()} size="sm" iconRight={ArrowRight} onClick={onNavigate}>
-        {ENTETE.explorer}
-      </Button>
-    </div>
+    <Link to={item.to} className="header__nav-link" onClick={onNavigate}>
+      {item.libelle}
+    </Link>
   );
 }
 
@@ -84,9 +60,22 @@ export function Header() {
 
         <div className="header__panel" id={idMenu}>
           <nav aria-label="Navigation principale" className="header__nav">
-            <Navigation onNavigate={fermer} />
+            <ul className="header__nav-list">
+              {NAVIGATION.map((item) => (
+                <li key={item.libelle}>
+                  <LienNavigation item={item} onNavigate={fermer} />
+                </li>
+              ))}
+            </ul>
           </nav>
-          <Actions onNavigate={fermer} />
+          <div className="header__actions">
+            <Link to={cheminRecherche()} className="header__icon-btn" aria-label={ENTETE.rechercher} onClick={fermer}>
+              <Search aria-hidden="true" />
+            </Link>
+            <Button to={cheminRecherche()} size="sm" iconRight={ArrowRight} onClick={fermer}>
+              {ENTETE.explorer}
+            </Button>
+          </div>
         </div>
       </div>
     </header>

@@ -7,17 +7,22 @@
 // =============================================================================
 import { ROUTES, cheminRecherche } from '../../app/routes.js';
 
+// Ancre de la section « À propos » de la landing page (identifiant HTML).
+export const ANCRE_A_PROPOS = 'a-propos';
+
+// `page: true` : lien vers une page (état actif souligné). Les autres liens
+// pointent vers une recherche pré-filtrée ou une ancre et ne sont jamais « actifs ».
 export const NAVIGATION = [
-  { libelle: 'Accueil', to: ROUTES.accueil, end: true },
-  { libelle: 'Ressources', to: ROUTES.recherche },
-  { libelle: 'Catégories' }, // LIEN INACTIF — pas de page catégories au MVP
-  { libelle: 'À propos' } // LIEN INACTIF — pas de page « À propos » au MVP
+  { libelle: 'Accueil', to: ROUTES.accueil, end: true, page: true },
+  { libelle: 'Ressources', to: ROUTES.recherche, page: true },
+  { libelle: "Sujets d'examens", to: cheminRecherche({ type: 'sujet-examen' }) },
+  { libelle: 'Livres', to: cheminRecherche({ type: 'livre' }) },
+  { libelle: 'Supports de cours', to: cheminRecherche({ type: 'cours' }) },
+  { libelle: 'À propos', to: `${ROUTES.accueil}#${ANCRE_A_PROPOS}` }
 ];
 
 export const ENTETE = {
   rechercher: 'Rechercher une ressource',
-  favoris: 'Favoris (bientôt disponible)', // HORS MVP — aucune fonctionnalité
-  connexion: 'Se connecter', // HORS MVP — pas de comptes
   explorer: 'Explorer les ressources',
   ouvrirMenu: 'Ouvrir le menu',
   fermerMenu: 'Fermer le menu'
@@ -25,49 +30,37 @@ export const ENTETE = {
 
 export const PIED_DE_PAGE = {
   description:
-    "Bibliothèque Académique Numérique Panafricaine. Plateforme dédiée à la diffusion du savoir, aux annales d'examens d'État et aux ressources universitaires en libre accès.",
-  // Icônes décoratives de la colonne logo (LIENS INACTIFS).
-  reseaux: [
-    { id: 'institution', libelle: 'Institutions partenaires' },
-    { id: 'documents', libelle: 'Documentation' },
-    { id: 'langues', libelle: 'Langues' }
-  ],
+    "ScolaRead réunit les sujets d'examens, livres et supports pédagogiques des lycéens et des étudiants, classés par niveau, série ou filière, matière et année.",
   colonnes: [
     {
-      titre: 'Ressources & Programmes',
+      titre: 'Ressources',
       liens: [
-        { libelle: 'Catalogue des Ressources', to: cheminRecherche() },
-        { libelle: 'Programmes Nationaux' }, // LIEN INACTIF
-        { libelle: "Annales d'Examens (BAC, Brevet)", to: cheminRecherche({ type: 'sujet-examen' }) },
-        { libelle: 'Fascicules de Cours & TD', to: cheminRecherche({ type: 'cours' }) },
-        { libelle: 'Thèses et Mémoires de Recherche' } // LIEN INACTIF
+        { libelle: 'Toutes les ressources', to: cheminRecherche() },
+        { libelle: "Sujets d'examens", to: cheminRecherche({ type: 'sujet-examen' }) },
+        { libelle: "Corrigés d'examens", to: cheminRecherche({ type: 'corrige' }) },
+        { libelle: 'Livres', to: cheminRecherche({ type: 'livre' }) },
+        { libelle: 'Supports de cours', to: cheminRecherche({ type: 'cours' }) }
       ]
     },
     {
-      titre: 'Institutions Partenaires',
+      titre: 'Par niveau',
       liens: [
-        { libelle: "Politique d'Accès Libre" }, // LIEN INACTIF
-        { libelle: 'Espace Enseignants & Chercheurs' }, // LIEN INACTIF
-        { libelle: 'Conseil Scientifique Panafricain' }, // LIEN INACTIF
-        { libelle: "Conditions d'Utilisation" }, // LIEN INACTIF
-        { libelle: 'Aide & Support Technique' } // LIEN INACTIF
+        { libelle: 'Lycée', to: cheminRecherche({ niveau: 'lycee' }) },
+        { libelle: 'Université', to: cheminRecherche({ niveau: 'universite' }) },
+        { libelle: 'Ajoutées récemment', to: cheminRecherche({ tri: 'recent' }) }
+      ]
+    },
+    {
+      titre: 'Informations',
+      liens: [
+        { libelle: 'À propos', to: `${ROUTES.accueil}#${ANCRE_A_PROPOS}` },
+        { libelle: "Conditions d'utilisation" }, // LIEN INACTIF — page à rédiger
+        { libelle: 'Mentions légales' } // LIEN INACTIF — page à rédiger
       ]
     }
   ],
-  disponibilite: {
-    titre: 'Disponibilité',
-    statut: 'Services en ligne 24/7',
-    detail: 'Accès instantané aux serveurs universitaires.',
-    languesTitre: 'Langues',
-    langue: 'Français (Afrique Centrale & Ouest)'
-  },
-  copyright: '© 2025 ScolaRead. Bibliothèque Académique Numérique Panafricaine. Tous droits réservés.',
-  liensBas: [
-    { libelle: 'Catalogue', to: cheminRecherche() },
-    { libelle: 'Programmes' }, // LIEN INACTIF
-    { libelle: 'Annales', to: cheminRecherche({ type: 'sujet-examen' }) },
-    { libelle: 'Accès Libre' }, // LIEN INACTIF
-    { libelle: 'Conditions' }, // LIEN INACTIF
-    { libelle: 'Support' } // LIEN INACTIF
-  ]
+  // BR10 — respect des droits d'utilisation des documents.
+  droits:
+    "Chaque document est diffusé dans le respect des droits de ses auteurs : les conditions d'utilisation sont indiquées sur sa fiche, et le téléchargement n'est proposé que lorsqu'il est autorisé.",
+  copyright: `© ${new Date().getFullYear()} ScolaRead. Tous droits réservés.`
 };

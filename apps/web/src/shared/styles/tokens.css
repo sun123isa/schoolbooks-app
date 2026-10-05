@@ -3,48 +3,64 @@
    Responsable : HIRWA Jean Baptiste (Lead Dev) — relecture : Salem KONGOLO
    Règle : aucun composant ne code en dur une couleur, une police, un rayon ou
    une ombre ; il utilise ces variables. Pour ajouter un token, le faire ici.
+   Direction artistique : vert profond (boutons, sections sombres), teintes de
+   vert clair pour les fonds, blanc et gris très clairs, texte presque noir.
+   Contrastes vérifiés (WCAG AA) : voir les commentaires de chaque couleur.
    ============================================================================= */
 
 :root {
   /* --- Couleurs de marque --------------------------------------------------- */
-  --color-primary: #1e3a8a; /* bleu marine : boutons, accents, pastilles */
-  --color-primary-hover: #172f70;
-  --color-primary-light: #2b4fb3; /* dégradés, survols clairs */
-  --color-primary-soft: #eef2fb; /* fonds teintés */
+  --color-primary: #17633a; /* vert profond : boutons, liens, icônes — blanc dessus 7,3:1 */
+  --color-primary-hover: #114d2d;
+  --color-primary-light: #2f8a55; /* deuxième ton du logo, survols */
+  --color-primary-dark: #0e3a25; /* fonds des sections sombres — blanc dessus 12,7:1 */
+  --color-primary-darker: #0a2a1b; /* pied de page */
+  --color-primary-soft: #eef6f1; /* fonds teintés : cartes, pastilles */
+  --color-primary-tint: #dcefe3; /* bordures et icônes sur fond teinté */
 
-  --color-accent: #f59e0b; /* ambre : soulignement, étape 03, CTA */
-  --color-accent-hover: #e08c00;
-  --color-accent-soft: #fef3d7; /* fonds de badges ambre */
-  --color-accent-border: #f8d48a;
-  --color-accent-strong: #b45309; /* texte ambre sur fond clair (contraste AA) */
-  --color-accent-large: #d97706; /* texte ambre en grande taille (contraste AA large) */
+  --color-accent: #7fd69a; /* vert clair : sur-titres et accents SUR FOND SOMBRE uniquement (7,3:1 sur primary-dark) */
+  --color-accent-hover: #6bc888;
+  --color-accent-soft: #e3f5e9;
+  --color-accent-border: #b9e5c7;
+  --color-accent-strong: #17633a; /* texte d'accent sur fond clair */
+  --color-accent-large: #2f8a55; /* accent en grande taille sur fond clair (4,3:1, AA large) */
 
-  --color-success: #10b981; /* pastilles de statut */
-  --color-success-soft: #dcfaf0;
-  --color-success-border: #a7ecd4;
-  --color-success-strong: #047857;
+  --color-success: #22a35a;
+  --color-success-soft: #e3f5e9;
+  --color-success-border: #b9e5c7;
+  --color-success-strong: #17633a;
 
   --color-danger-soft: #fde8e8;
   --color-danger-strong: #b42318;
 
   /* --- Neutres ---------------------------------------------------------------- */
   --color-bg: #ffffff;
-  --color-bg-alt: #f5f7fb; /* sections alternées gris-bleu */
-  --color-bg-footer: #eff3f8;
+  --color-bg-alt: #f6f8f7; /* sections alternées gris très clair */
+  --color-bg-footer: #0a2a1b;
   --color-surface: #ffffff;
-  --color-text: #0f172a; /* bleu-noir */
-  --color-text-muted: #5b6b82; /* gris ardoise (contraste AA sur blanc et bg-alt) */
-  --color-text-subtle: #8492a6;
-  --color-border: #e3e8f0;
-  --color-border-strong: #cfd7e3;
-  --color-chip: #eef1f6;
+  --color-text: #111a15; /* presque noir — 17,8:1 sur blanc */
+  --color-text-muted: #56635b; /* gris vert — 6,3:1 sur blanc, 5,9:1 sur bg-alt */
+  --color-text-subtle: #7b877f;
+  --color-border: #e4eae6;
+  --color-border-strong: #cdd7d0;
+  --color-chip: #eef2ef;
   --color-on-primary: #ffffff;
-  --color-on-primary-muted: #c9d4ef;
-  --color-focus: #2b6cf6;
+  --color-on-primary-muted: #cfe0d5; /* texte secondaire sur fond vert foncé — 9,3:1 */
+  --color-focus: #2f8a55;
+  --color-focus-on-dark: #7fd69a;
+  --color-hover-on-dark: rgba(255, 255, 255, 0.08); /* survol des éléments posés sur fond sombre */
+  --color-line-on-dark: rgba(255, 255, 255, 0.14); /* séparateurs sur fond sombre */
+
+  /* Voiles posés sur les photos (hero, bandeau final) : garantissent le contraste du texte blanc. */
+  --overlay-hero: linear-gradient(90deg, rgba(8, 36, 22, 0.94) 0%, rgba(8, 36, 22, 0.78) 38%, rgba(8, 36, 22, 0.2) 70%, rgba(8, 36, 22, 0) 100%);
+  --overlay-hero-mobile: linear-gradient(180deg, rgba(8, 36, 22, 0.8) 0%, rgba(8, 36, 22, 0.92) 100%);
+  --overlay-cta: linear-gradient(180deg, rgba(8, 36, 22, 0.55) 0%, rgba(8, 36, 22, 0.72) 100%);
 
   /* --- Typographie ------------------------------------------------------------ */
   --font-heading: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
   --font-body: 'Inter Variable', 'Inter', 'Inter Fallback', 'Segoe UI', system-ui, sans-serif;
+  /* Effet typographique d'accent (un mot du hero et l'annotation manuscrite) : à n'utiliser nulle part ailleurs. */
+  --font-script: 'Kaushan Script', 'Segoe Script', cursive;
 
   --text-xs: 0.75rem; /* 12 px */
   --text-sm: 0.875rem; /* 14 px */
@@ -52,27 +68,28 @@
   --text-lg: 1.125rem; /* 18 px */
   --text-xl: 1.25rem; /* 20 px */
   --text-2xl: 1.625rem; /* 26 px */
-  --text-3xl: clamp(1.75rem, 1.2rem + 1.6vw, 2.375rem); /* titres de section */
-  --text-display: clamp(2.25rem, 1.3rem + 3vw, 3.5rem); /* titre du hero */
+  --text-3xl: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem); /* titres de section */
+  --text-display: clamp(2.375rem, 1.2rem + 3.6vw, 4rem); /* titre du hero */
 
   /* --- Formes ------------------------------------------------------------------- */
   --radius-sm: 6px;
-  --radius-md: 10px; /* boutons, champs */
-  --radius-lg: 16px; /* cartes */
-  --radius-xl: 24px; /* grands blocs, visuel du hero */
+  --radius-md: 8px; /* boutons, champs */
+  --radius-lg: 14px; /* cartes */
+  --radius-xl: 20px; /* grands blocs, photos */
   --radius-pill: 999px; /* badges, pastilles */
 
-  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
-  --shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 10px 30px -12px rgba(15, 23, 42, 0.18), 0 2px 6px rgba(15, 23, 42, 0.05);
-  --shadow-lg: 0 24px 60px -20px rgba(15, 23, 42, 0.28);
-  --shadow-halo-accent: 0 30px 90px -10px rgba(245, 158, 11, 0.38);
+  --shadow-xs: 0 1px 2px rgba(10, 42, 27, 0.05);
+  --shadow-sm: 0 2px 8px rgba(10, 42, 27, 0.06), 0 1px 2px rgba(10, 42, 27, 0.04);
+  --shadow-md: 0 12px 32px -14px rgba(10, 42, 27, 0.22), 0 2px 6px rgba(10, 42, 27, 0.05);
+  --shadow-lg: 0 24px 60px -20px rgba(10, 42, 27, 0.32);
+  --shadow-text: 0 2px 12px rgba(0, 0, 0, 0.35); /* texte posé directement sur une photo */
+  --shadow-primary: 0 8px 18px -8px rgba(23, 99, 58, 0.65);
 
   /* --- Mise en page --------------------------------------------------------------- */
   --container-max: 1240px;
-  --container-padding: clamp(16px, 4vw, 32px);
-  --header-height: 68px;
-  --section-padding: clamp(64px, 8vw, 112px);
+  --container-padding: clamp(16px, 4vw, 40px);
+  --header-height: 72px;
+  --section-padding: clamp(64px, 8vw, 104px);
 
   /* --- Animations ------------------------------------------------------------------ */
   --transition-fast: 150ms ease;

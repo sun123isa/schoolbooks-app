@@ -1,7 +1,8 @@
 // =============================================================================
 // Socle frontend — bouton (lien interne, ou <button>)
 // Responsable : HIRWA Jean Baptiste (Lead Dev) — relecture : Salem KONGOLO
-// Variantes : primary (bleu plein), outline (contour), accent (ambre plein).
+// Variantes : primary (vert plein), outline (contour), accent (vert clair plein),
+//            light (blanc, sur fond sombre), ghost-light (contour blanc, sur fond sombre).
 // Tailles : md (par défaut), sm. Icônes lucide-react via iconLeft / iconRight.
 // Usage : <Button to={cheminRecherche()} iconLeft={Search}>Trouver</Button>
 // =============================================================================
