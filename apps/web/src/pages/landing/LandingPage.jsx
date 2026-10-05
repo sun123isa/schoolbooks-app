@@ -9,9 +9,8 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useProgressionDefilement } from '../../shared/hooks/useMouvement.js';
-import { A_PROPOS, APPEL_A_L_ACTION, CHIFFRES, HERO, NOUVEAUTES, RESSOURCES } from './landing.content.js';
+import { A_PROPOS, APPEL_A_L_ACTION, HERO, NOUVEAUTES, RESSOURCES } from './landing.content.js';
 import { HeroSection } from './components/HeroSection.jsx';
-import { ChiffresCles } from './components/ChiffresCles.jsx';
 import { RessourcesSection } from './components/RessourcesSection.jsx';
 import { AProposSection } from './components/AProposSection.jsx';
 import { NouveautesSection } from './components/NouveautesSection.jsx';
@@ -44,7 +43,6 @@ export function LandingPage() {
     <>
       <BarreProgression />
       <HeroSection contenu={HERO} />
-      <ChiffresCles contenu={CHIFFRES} />
       <RessourcesSection contenu={RESSOURCES} />
       <AProposSection contenu={A_PROPOS} />
       <NouveautesSection contenu={NOUVEAUTES} />

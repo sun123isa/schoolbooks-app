@@ -1,9 +1,7 @@
 // =============================================================================
 // Landing page — appels API
 // Responsable : HIRWA Jean Baptiste — relecture : Salem KONGOLO
-// Consomme (aucune route dédiée n'existe pour les statistiques) :
-//   GET /api/niveaux, /api/matieres, /api/types-documents   (référentiels, Isaac)
-//   GET /api/ressources?limit=…&tri=recent                  (recherche, Salem)
+// Consomme : GET /api/ressources?tri=recent&limit=…&niveau=…  (recherche, Salem)
 // =============================================================================
 import { API_ROUTES, RechercheQuerySchema } from '@schoolbooks/shared';
 import { apiGet } from '../../shared/api/client.js';
@@ -18,24 +16,8 @@ function rechercher(criteres, signal) {
   });
 }
 
-// Chiffres du bandeau : longueur des référentiels + `total` d'une recherche sans critère.
-export async function fetchChiffres(signal) {
-  const [niveaux, matieres, types, recherche] = await Promise.all([
-    apiGet(API_ROUTES.niveaux, { signal, mock: async () => (await mocks()).NIVEAUX }),
-    apiGet(API_ROUTES.matieres, { signal, mock: async () => (await mocks()).MATIERES }),
-    apiGet(API_ROUTES.typesDocuments, { signal, mock: async () => (await mocks()).TYPES_DOCUMENTS }),
-    rechercher({ limit: 1 }, signal)
-  ]);
-  return {
-    niveaux: niveaux.map((niveau) => niveau.libelle).join(' & '),
-    ressources: String(recherche.total),
-    matieres: String(matieres.length),
-    types: String(types.length)
-  };
-}
-
-// Dernières ressources ajoutées (section « Ajoutées récemment »).
-export async function fetchNouveautes(nombre, signal) {
-  const resultat = await rechercher({ tri: 'recent', limit: nombre }, signal);
+// Dernières ressources ajoutées (section « Ajoutées récemment »), filtrables par niveau.
+export async function fetchNouveautes(nombre, niveau, signal) {
+  const resultat = await rechercher({ tri: 'recent', limit: nombre, niveau: niveau || undefined }, signal);
   return resultat.items;
 }

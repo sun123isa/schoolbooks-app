@@ -1,9 +1,9 @@
-// Tests de la landing page : liens, codes de référentiel et chiffres cohérents avec le contrat.
+// Tests de la landing page : liens, codes de référentiel et données cohérents avec le contrat.
 // Responsable : HIRWA Jean Baptiste — relecture : Salem KONGOLO
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { RechercheQuerySchema } from '@schoolbooks/shared';
-import { MATIERES, NIVEAUX, RESSOURCES as RESSOURCES_MOCK, TYPES_DOCUMENTS } from '@schoolbooks/shared/mocks';
-import { A_PROPOS, APPEL_A_L_ACTION, CHIFFRES, HERO, NOUVEAUTES, RESSOURCES } from './landing.content.js';
+import { NIVEAUX, RESSOURCES as RESSOURCES_MOCK, TYPES_DOCUMENTS } from '@schoolbooks/shared/mocks';
+import { A_PROPOS, APPEL_A_L_ACTION, HERO, NOUVEAUTES, RESSOURCES, attribuerImages, cheminNouveautes } from './landing.content.js';
 import { NAVIGATION, PIED_DE_PAGE } from '../../shared/layout/layout.content.js';
 
 const codes = (liste) => liste.map((element) => element.code);
@@ -15,7 +15,7 @@ const liensRecherche = [
   RESSOURCES.carteFlottante.lien.to,
   ...RESSOURCES.cartes.map((carte) => carte.to),
   A_PROPOS.bouton.to,
-  NOUVEAUTES.lienTout.to,
+  ...NOUVEAUTES.filtres.map((filtre) => cheminNouveautes(filtre.code)),
   APPEL_A_L_ACTION.bouton.to,
   ...NAVIGATION.map((item) => item.to),
   ...PIED_DE_PAGE.colonnes.flatMap((colonne) => colonne.liens.map((lien) => lien.to))
@@ -43,9 +43,28 @@ describe('liens vers la recherche (contrat partagé)', () => {
 });
 
 describe('ancre « À propos »', () => {
-  it('le hero, l’en-tête et la section utilisent le même identifiant', () => {
+  it('le hero et le pied de page mènent à la section ; elle n’est plus dans la barre', () => {
     expect(HERO.actions.secondaire.ancre).toBe(A_PROPOS.ancre);
-    expect(NAVIGATION.find((item) => item.libelle === 'À propos').to).toBe(`/#${A_PROPOS.ancre}`);
+    const liensPied = PIED_DE_PAGE.colonnes.flatMap((colonne) => colonne.liens);
+    expect(liensPied.find((lien) => lien.libelle === 'À propos').to).toBe(`/#${A_PROPOS.ancre}`);
+    expect(NAVIGATION.some((item) => item.libelle === 'À propos')).toBe(false);
+  });
+});
+
+describe('nouveautés', () => {
+  it('des photos pour chaque type de document', () => {
+    for (const code of codes(TYPES_DOCUMENTS)) expect(NOUVEAUTES.images[code]?.length).toBeGreaterThan(0);
+  });
+
+  it('pas de photo en double parmi les ressources affichées', () => {
+    const sujets = RESSOURCES_MOCK.filter((r) => r.type.code === 'sujet-examen').slice(0, NOUVEAUTES.nombre);
+    expect(sujets).toHaveLength(NOUVEAUTES.nombre);
+    const images = attribuerImages(sujets);
+    expect(new Set(images).size).toBe(images.length);
+  });
+
+  it('les filtres utilisent des niveaux existants', () => {
+    for (const filtre of NOUVEAUTES.filtres.filter((f) => f.code)) expect(codes(NIVEAUX)).toContain(filtre.code);
   });
 });
 
@@ -58,20 +77,15 @@ describe('données de la page (mode mock)', () => {
     api = await import('./landing.api.js');
   });
 
-  it('les chiffres sont calculés à partir des référentiels et du catalogue', async () => {
-    const chiffres = await api.fetchChiffres();
-    expect(chiffres).toEqual({
-      niveaux: NIVEAUX.map((n) => n.libelle).join(' & '),
-      ressources: String(RESSOURCES_MOCK.length),
-      matieres: String(MATIERES.length),
-      types: String(TYPES_DOCUMENTS.length)
-    });
-    expect(CHIFFRES.map((item) => item.id).sort()).toEqual(Object.keys(chiffres).sort());
+  it('les nouveautés renvoient au plus le nombre demandé', async () => {
+    const items = await api.fetchNouveautes(NOUVEAUTES.nombre, '');
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.length).toBeLessThanOrEqual(NOUVEAUTES.nombre);
   });
 
-  it('les nouveautés renvoient au plus le nombre demandé', async () => {
-    const items = await api.fetchNouveautes(NOUVEAUTES.nombre);
-    expect(items.length).toBeLessThanOrEqual(NOUVEAUTES.nombre);
+  it('le filtre par niveau est appliqué strictement (BR07)', async () => {
+    const items = await api.fetchNouveautes(NOUVEAUTES.nombre, 'universite');
     expect(items.length).toBeGreaterThan(0);
+    for (const ressource of items) expect(ressource.niveau.code).toBe('universite');
   });
 });

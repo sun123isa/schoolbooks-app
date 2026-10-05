@@ -1,5 +1,5 @@
 /* =============================================================================
-   Landing page — hero et bandeau de chiffres
+   Landing page — hero
    Responsable : HIRWA Jean Baptiste
    Animations : entrée en cascade (--i), zoom lent du fond, glissement du
    portrait, titre mot par mot, soulignement et flèche dessinés, étiquettes
@@ -55,8 +55,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  min-height: clamp(560px, 46vw, 700px);
-  padding-block: 72px 140px;
+  min-height: clamp(560px, 46vw, 680px);
+  padding-block: 80px 96px;
 }
 
 .hero__content {
@@ -254,7 +254,7 @@
 .hero__annotation {
   position: absolute;
   right: var(--container-padding);
-  bottom: 110px;
+  bottom: 64px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -281,84 +281,6 @@
   stroke-dasharray: 80;
   stroke-dashoffset: 80;
   animation: tracer 1000ms var(--ease-out) 2100ms forwards;
-}
-
-/* --- Bandeau de chiffres (chevauche le bas du hero) --------------------------- */
-.chiffres {
-  position: relative;
-  z-index: 2;
-  margin-top: -64px;
-}
-
-.chiffres__card {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  margin: 0;
-  padding: 26px 8px;
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-lg);
-  animation: entree-monter 900ms var(--ease-out) 900ms both;
-}
-
-.chiffres__item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 4px 28px;
-}
-
-.chiffres__item + .chiffres__item {
-  border-left: 1px solid var(--color-border);
-}
-
-.chiffres__icon {
-  display: inline-grid;
-  flex-shrink: 0;
-  place-items: center;
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  transition:
-    transform var(--transition-base) var(--ease-spring),
-    background-color var(--transition-base),
-    color var(--transition-base);
-  animation: icone-pop 700ms var(--ease-spring) both;
-  animation-delay: calc(1100ms + var(--i, 0) * 120ms);
-}
-
-.chiffres__item:hover .chiffres__icon {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  transform: translateY(-3px) rotate(-6deg);
-}
-
-.chiffres__icon svg {
-  width: 30px;
-  height: 30px;
-}
-
-.chiffres__text {
-  display: flex;
-  flex-direction: column;
-}
-
-.chiffres__value {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-size: var(--text-xl);
-  font-weight: 800;
-  line-height: 1.2;
-  color: var(--color-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.chiffres__label {
-  margin-top: 2px;
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
 }
 
 /* --- Animations ---------------------------------------------------------------- */
@@ -456,12 +378,6 @@
   }
 }
 
-@keyframes icone-pop {
-  from {
-    opacity: 0;
-    transform: scale(0.4) rotate(-20deg);
-  }
-}
 
 /* --- Responsive ---------------------------------------------------------------- */
 @media (max-width: 1080px) {
@@ -470,14 +386,6 @@
     display: none;
   }
 
-  .chiffres__card {
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 20px;
-  }
-
-  .chiffres__item:nth-child(3) {
-    border-left: 0;
-  }
 }
 
 @media (max-width: 960px) {
@@ -502,25 +410,11 @@
 @media (max-width: 600px) {
   .hero__inner {
     min-height: 0;
-    padding-block: 56px 112px;
+    padding-block: 56px 64px;
   }
 
   .hero__actions .btn {
     flex: 1 1 100%;
   }
 
-  .chiffres__card {
-    grid-template-columns: 1fr;
-    padding: 12px 4px;
-    row-gap: 0;
-  }
-
-  .chiffres__item {
-    padding: 14px 20px;
-  }
-
-  .chiffres__item + .chiffres__item {
-    border-left: 0;
-    border-top: 1px solid var(--color-border);
-  }
 }

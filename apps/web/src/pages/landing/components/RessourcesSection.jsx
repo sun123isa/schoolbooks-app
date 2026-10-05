@@ -56,7 +56,13 @@ export function RessourcesSection({ contenu }) {
 
         <ul className="types-grid">
           {contenu.cartes.map((carte, index) => (
-            <Reveal as="li" key={carte.type} effet="monter" delay={index * 90}>
+            <Reveal
+              as="li"
+              key={carte.type}
+              effet="monter"
+              delay={index * 90}
+              className={carte.masqueMobile ? 'types-grid__item--masque-mobile' : undefined}
+            >
               <Link to={carte.to} className="type-card">
                 <span className="type-card__icon">
                   <IconeType code={carte.type} />
