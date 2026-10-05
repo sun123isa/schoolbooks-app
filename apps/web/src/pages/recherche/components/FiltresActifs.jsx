@@ -37,3 +37,8 @@ export function FiltresActifs({ actifs, onRetirer, onToutRetirer }) {
     </div>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Note : Graciel MBEMBA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------

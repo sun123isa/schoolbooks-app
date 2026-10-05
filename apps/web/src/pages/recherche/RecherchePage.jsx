@@ -1,7 +1,6 @@
 // =============================================================================
 // Page de recherche — route « /recherche »
 // Responsable : Graciel MBEMBA — relecture : Salem KONGOLO
-// Implémentation : HIRWA Jean Baptiste (intérim), à reprendre par Graciel.
 // Tickets Jira : « Recherche par mot-clé », « Filtres par niveau, série/filière,
 // matière, année, type », « Résultats de recherche », « Message en l'absence de résultat »
 //
@@ -14,6 +13,7 @@ import { useLocation } from 'react-router-dom';
 import { useApi } from '../../shared/hooks/useApi.js';
 import { EmptyState, ErrorMessage } from '../../shared/components/StatusMessages.jsx';
 import { Button } from '../../shared/components/ui/Button.jsx';
+import { filiereComplete } from '../../shared/format/libelles.js';
 import { fetchFilieres, fetchReferentielsFiltres, rechercherRessources } from './recherche.api.js';
 import { CRITERES, useCriteresUrl } from './useCriteresUrl.js';
 import { TEXTES, TRIS, criteresActifs, libelleTotal } from './recherche.content.js';
@@ -89,6 +89,8 @@ export function RecherchePage() {
   const resultats = useApi((signal) => rechercherRessources(criteres, signal), [location.search]);
 
   const actifs = criteresActifs(criteres, { ...referentiels.data, filieres: filieres.data ?? [] });
+  // Liste des séries/filières sans tiret : « Série C (Mathématiques et sciences physiques) ».
+  const optionsFilieres = (filieres.data ?? []).map((filiere) => ({ ...filiere, libelle: filiereComplete(filiere.libelle) }));
   const retirer = (cle) => modifierCriteres({ [cle]: undefined });
   const toutRetirer = () => modifierCriteres(toutEffacer);
 
@@ -111,7 +113,7 @@ export function RecherchePage() {
         <PanneauFiltres
           criteres={criteres}
           referentiels={referentiels.data}
-          filieres={filieres.data ?? []}
+          filieres={optionsFilieres}
           nombreActifs={actifs.filter((actif) => actif.cle !== 'q').length}
           onChange={modifierCriteres}
           onReinitialiser={() => modifierCriteres({ ...toutEffacer, q: criteres.q, tri: criteres.tri })}
@@ -163,3 +165,8 @@ export function RecherchePage() {
     </div>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Note : Graciel MBEMBA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------

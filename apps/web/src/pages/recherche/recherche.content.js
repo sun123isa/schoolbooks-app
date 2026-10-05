@@ -1,10 +1,10 @@
 // =============================================================================
 // Page de recherche — textes et logique de présentation (sans React)
 // Responsable : Graciel MBEMBA — relecture : Salem KONGOLO
-// Implémentation : HIRWA Jean Baptiste (intérim), à reprendre par Graciel.
 // Textes séparés de la présentation ; fonctions pures testées dans
 // recherche.content.test.js.
 // =============================================================================
+import { filiereCourte } from '../../shared/format/libelles.js';
 
 export const TEXTES = {
   titre: 'Rechercher une ressource',
@@ -47,7 +47,7 @@ export const TEXTES = {
   },
   carte: {
     telechargeable: 'Téléchargeable',
-    consultation: 'Consultation en ligne',
+    consultation: 'En ligne',
     toutesSeries: 'Toutes séries'
   },
   pagination: {
@@ -79,7 +79,7 @@ export function criteresActifs(criteres, { niveaux = [], filieres = [], matieres
   const libelles = {
     q: (v) => `« ${v} »`,
     niveau: (v) => libelleDe(niveaux, v),
-    filiere: (v) => libelleDe(filieres, v),
+    filiere: (v) => filiereCourte(libelleDe(filieres, v)),
     matiere: (v) => libelleDe(matieres, v),
     annee: (v) => String(v),
     type: (v) => libelleDe(types, v)
@@ -97,3 +97,8 @@ export function pagesAffichees(page, totalPages) {
   const triees = [...pages].filter((p) => p >= 1 && p <= totalPages).sort((a, b) => a - b);
   return triees.flatMap((p, i) => (i > 0 && p - triees[i - 1] > 1 ? ['…', p] : [p]));
 }
+
+// -----------------------------------------------------------------------------
+// Note : Graciel MBEMBA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------

@@ -24,7 +24,7 @@ describe('criteresActifs', () => {
     expect(actifs).toEqual([
       { cle: 'q', libelle: '« maths »' },
       { cle: 'niveau', libelle: 'Lycée' },
-      { cle: 'filiere', libelle: 'Série C — Mathématiques et sciences physiques' },
+      { cle: 'filiere', libelle: 'Série C' },
       { cle: 'annee', libelle: '2023' },
       { cle: 'type', libelle: "Corrigé d'examen" }
     ]);
@@ -54,3 +54,8 @@ describe('tris', () => {
     expect(TRIS.map((tri) => tri.code)).toEqual(TRIS_CONTRAT);
   });
 });
+
+// -----------------------------------------------------------------------------
+// Note : Graciel MBEMBA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------

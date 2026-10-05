@@ -51,3 +51,8 @@ export function BarreRecherche({ valeur = '', onRechercher }) {
     </form>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Note : Graciel MBEMBA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------

@@ -55,3 +55,8 @@ export function Pagination({ page, totalPages, onChange }) {
     </nav>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Note : Graciel MBEMBA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------
