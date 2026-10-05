@@ -1,9 +1,9 @@
 // =============================================================================
 // Page de consultation — textes et logique de présentation (sans React)
 // Responsable : Karene MOUSSOUNDA — relecture : Salem KONGOLO
-// Implémentation : HIRWA Jean Baptiste (intérim), à reprendre par Karene.
 // Fonctions pures testées dans ressource.content.test.js.
 // =============================================================================
+import { filiereComplete } from '../../shared/format/libelles.js';
 
 export const TEXTES = {
   retour: 'Retour aux résultats',
@@ -11,9 +11,6 @@ export const TEXTES = {
   consultationSeule: 'Consultation en ligne uniquement',
   chargement: 'Chargement de la ressource…',
   informations: 'Informations',
-  description: 'Description',
-  droits: "Droits d'utilisation",
-  droitsInconnus: "Les conditions d'utilisation de ce document ne sont pas précisées.",
   introuvable: {
     titre: 'Ressource introuvable',
     texte: "Cette ressource n'existe pas ou n'est plus disponible. Elle a peut-être été retirée du catalogue.",
@@ -58,7 +55,7 @@ export function formaterDate(iso) {
 export function informations(ressource) {
   return [
     { id: 'niveau', label: 'Niveau', valeur: ressource.niveau?.libelle },
-    { id: 'filiere', label: 'Série / filière', valeur: ressource.filiere?.libelle ?? 'Toutes séries' },
+    { id: 'filiere', label: 'Série / filière', valeur: filiereComplete(ressource.filiere?.libelle) ?? 'Toutes séries' },
     { id: 'matiere', label: 'Matière', valeur: ressource.matiere?.libelle },
     { id: 'annee', label: 'Année', valeur: ressource.annee ? String(ressource.annee) : null },
     { id: 'type', label: 'Type', valeur: ressource.type?.libelle },
@@ -83,3 +80,8 @@ export function zoomSuivant(echelle, sens) {
   const suivante = sens > 0 ? echelle * PALIER : echelle / PALIER;
   return Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.round(suivante * 100) / 100));
 }
+
+// -----------------------------------------------------------------------------
+// Note : Karene MOUSSOUNDA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------

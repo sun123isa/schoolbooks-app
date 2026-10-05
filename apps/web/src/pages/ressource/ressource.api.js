@@ -10,7 +10,7 @@ import { API_ROUTES, ERROR_CODES } from '@schoolbooks/shared';
 import { ApiError, apiGet, resolveApiUrl } from '../../shared/api/client.js';
 
 // PDF d'exemple servi par Vite en mode mock (apps/web/public/mocks/exemple.pdf).
-const PDF_MOCK = '/mocks/exemple.pdf';
+const PDF_MOCK = '/mocks/2020_suj_bac_C.pdf';
 
 export async function fetchRessource(id, signal) {
   const ressource = await apiGet(API_ROUTES.ressource(id), {

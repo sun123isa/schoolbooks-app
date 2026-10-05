@@ -1,7 +1,8 @@
 // =============================================================================
-// Page de consultation — fiche de la ressource (informations, description, droits)
+// Page de consultation — fiche de la ressource (informations)
 // Responsable : Karene MOUSSOUNDA — relecture : Salem KONGOLO
-// BR10 : les droits d'utilisation sont toujours affichés.
+// Les cartes « Description » et « Droits d'utilisation » ont été retirées à la
+// demande du Lead Dev ; la mention générale des droits reste dans le pied de page.
 // =============================================================================
 import {
   BankIcon,
@@ -11,7 +12,6 @@ import {
   FileIcon,
   GraduationCapIcon,
   HardDrivesIcon,
-  ShieldCheckIcon,
   StackIcon,
   UserIcon
 } from '@phosphor-icons/react';
@@ -49,21 +49,11 @@ export function FicheRessource({ ressource }) {
           })}
         </dl>
       </section>
-
-      {ressource.description && (
-        <section className="fiche__bloc">
-          <h2 className="fiche__titre">{TEXTES.description}</h2>
-          <p className="fiche__texte">{ressource.description}</p>
-        </section>
-      )}
-
-      <section className="fiche__bloc fiche__bloc--droits">
-        <h2 className="fiche__titre">
-          <ShieldCheckIcon weight="duotone" aria-hidden="true" />
-          {TEXTES.droits}
-        </h2>
-        <p className="fiche__texte">{ressource.droits ?? TEXTES.droitsInconnus}</p>
-      </section>
     </aside>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Note : Karene MOUSSOUNDA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------

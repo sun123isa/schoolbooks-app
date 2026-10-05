@@ -1,7 +1,6 @@
 // =============================================================================
 // Page de consultation — visionneuse PDF intégrée (pdf.js)
 // Responsable : Karene MOUSSOUNDA — relecture : Salem KONGOLO
-// Implémentation : HIRWA Jean Baptiste (intérim), à reprendre par Karene.
 //
 // Rendu page par page dans un <canvas> : pas de visionneuse native du
 // navigateur, donc pas de bouton de téléchargement caché (BR08).
@@ -266,3 +265,8 @@ export function VisionneusePdf({ url, titre, onErreur }) {
     </div>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Note : Karene MOUSSOUNDA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------

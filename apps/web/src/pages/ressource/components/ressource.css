@@ -48,9 +48,9 @@
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 20px 32px;
-  padding: clamp(24px, 4vw, 40px);
-  border-radius: var(--radius-xl);
+  gap: 14px 24px;
+  padding: clamp(18px, 2.4vw, 24px) clamp(18px, 3vw, 28px);
+  border-radius: var(--radius-lg);
   background: var(--color-primary-dark);
   color: var(--color-on-primary-muted);
   animation: entree-monter 600ms var(--ease-out) both;
@@ -60,10 +60,10 @@
   content: '';
   position: absolute;
   z-index: -1;
-  right: -100px;
-  bottom: -140px;
-  width: 300px;
-  height: 300px;
+  right: -80px;
+  bottom: -120px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
   background: var(--color-primary-light);
   opacity: 0.35;
@@ -71,7 +71,7 @@
 }
 
 .consultation__intro {
-  flex: 1 1 520px;
+  flex: 1 1 420px;
   min-width: 0;
 }
 
@@ -89,22 +89,22 @@
 .consultation__type-icone {
   display: inline-grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border: 1px solid var(--color-line-on-dark);
-  border-radius: 12px;
+  border-radius: 9px;
   background: var(--color-hover-on-dark);
   animation: icone-entree 700ms var(--ease-spring) 200ms both;
 }
 
 .consultation__type-icone svg {
-  width: 22px;
-  height: 22px;
+  width: 17px;
+  height: 17px;
 }
 
 .consultation__titre {
-  margin-top: 14px;
-  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  margin-top: 8px;
+  font-size: clamp(1.25rem, 1rem + 0.9vw, 1.625rem);
   font-weight: 800;
   color: var(--color-on-primary);
 }
@@ -112,17 +112,17 @@
 .consultation__pastilles {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 6px;
+  margin-top: 10px;
   list-style: none;
 }
 
 .consultation__pastilles li {
-  padding: 5px 12px;
+  padding: 3px 10px;
   border: 1px solid var(--color-line-on-dark);
   border-radius: var(--radius-pill);
   background: var(--color-hover-on-dark);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--color-on-primary);
   animation: entree-monter 500ms var(--ease-out) both;
   animation-delay: calc(250ms + var(--i, 0) * 70ms);
@@ -369,10 +369,6 @@
   background: var(--color-surface);
 }
 
-.fiche__bloc--droits {
-  border-color: var(--color-primary-tint);
-  background: var(--color-primary-soft);
-}
 
 .fiche__titre {
   display: flex;
@@ -431,11 +427,6 @@
   text-align: right;
 }
 
-.fiche__texte {
-  font-size: var(--text-sm);
-  line-height: 1.7;
-  color: var(--color-text-muted);
-}
 
 /* --- Animations -------------------------------------------------------------------- */
 @keyframes page-entree {
@@ -487,3 +478,8 @@
     height: 44px;
   }
 }
+
+/* -----------------------------------------------------------------------------
+   Note : Karene MOUSSOUNDA n'étant pas disponible, cette tâche a été réalisée par
+   HIRWA Jean Baptiste.
+   ----------------------------------------------------------------------------- */

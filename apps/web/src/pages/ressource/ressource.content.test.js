@@ -73,3 +73,8 @@ describe('zoomSuivant', () => {
     expect(zoomSuivant(ZOOM_MIN, -1)).toBe(ZOOM_MIN);
   });
 });
+
+// -----------------------------------------------------------------------------
+// Note : Karene MOUSSOUNDA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------

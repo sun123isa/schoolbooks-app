@@ -1,7 +1,6 @@
 // =============================================================================
 // Page de consultation — route « /ressources/:id »
 // Responsable : Karene MOUSSOUNDA — relecture : Salem KONGOLO
-// Implémentation : HIRWA Jean Baptiste (intérim), à reprendre par Karene.
 // Tickets Jira : « Consulter la fiche d'une ressource »,
 // « Télécharger uniquement les documents disponibles au téléchargement »
 //
@@ -20,6 +19,7 @@ import { useApi } from '../../shared/hooks/useApi.js';
 import { EmptyState, ErrorMessage, Loader } from '../../shared/components/StatusMessages.jsx';
 import { Button } from '../../shared/components/ui/Button.jsx';
 import { IconeType } from '../../shared/components/ui/IconeType.jsx';
+import { filiereCourte, titreRessource } from '../../shared/format/libelles.js';
 import { fetchRessource } from './ressource.api.js';
 import { TEXTES, peutTelecharger } from './ressource.content.js';
 import { FicheRessource } from './components/FicheRessource.jsx';
@@ -27,7 +27,7 @@ import { VisionneusePdf } from './components/VisionneusePdf.jsx';
 import './components/ressource.css';
 
 function EnTete({ ressource, telechargeable }) {
-  const pastilles = [ressource.niveau.libelle, ressource.filiere?.libelle, ressource.matiere.libelle, ressource.annee]
+  const pastilles = [ressource.niveau.libelle, filiereCourte(ressource.filiere?.libelle), ressource.matiere.libelle, ressource.annee]
     .filter(Boolean)
     .map(String);
 
@@ -40,7 +40,7 @@ function EnTete({ ressource, telechargeable }) {
           </span>
           {ressource.type.libelle}
         </span>
-        <h1 className="consultation__titre">{ressource.titre}</h1>
+        <h1 className="consultation__titre">{titreRessource(ressource.titre)}</h1>
         <ul className="consultation__pastilles" aria-label="Classement">
           {pastilles.map((pastille, index) => (
             <li key={pastille} style={{ '--i': index }}>
@@ -111,7 +111,7 @@ export function RessourcePage() {
               {pdfEnErreur ? (
                 <ErrorMessage message={TEXTES.fichierIndisponible} />
               ) : (
-                <VisionneusePdf key={url} url={url} titre={data.titre} onErreur={signalerErreur} />
+                <VisionneusePdf key={url} url={url} titre={titreRessource(data.titre)} onErreur={signalerErreur} />
               )}
             </div>
             <FicheRessource ressource={data} />
@@ -121,3 +121,8 @@ export function RessourcePage() {
     </div>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Note : Karene MOUSSOUNDA n'étant pas disponible, cette tâche a été réalisée par
+// HIRWA Jean Baptiste.
+// -----------------------------------------------------------------------------
