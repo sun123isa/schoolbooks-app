@@ -6,21 +6,22 @@
 //   en-tête · hero · bandeau de chiffres · nos ressources · à propos ·
 //   ajoutées récemment · appel à l'action · pied de page.
 //
-// ⚠ IMAGES DE SUBSTITUTION à remplacer par les photos définitives (mêmes
-// proportions) : voir ./assets/README.md.
+// Photos : Unsplash (licence Unsplash, usage commercial libre) — auteurs et
+// liens d'origine listés dans ./assets/README.md.
 //
 // Codes de référentiel (niveau, type, tri) : identiques au contrat partagé
 // (@schoolbooks/shared) — vérifiés par landing.content.test.js.
 // =============================================================================
 import { cheminRecherche } from '../../app/routes.js';
 import { ANCRE_A_PROPOS } from '../../shared/layout/layout.content.js';
-import imageHero from './assets/hero-campus-etudiante.svg';
-import imageRessources from './assets/ressources-etudiants-revision.svg';
-import imageAPropos from './assets/a-propos-bibliotheque.svg';
-import imageNouveaute1 from './assets/nouveaute-1.svg';
-import imageNouveaute2 from './assets/nouveaute-2.svg';
-import imageNouveaute3 from './assets/nouveaute-3.svg';
-import imageCta from './assets/cta-etudiants-pelouse.svg';
+import imageHeroFond from './assets/hero-fond-bibliotheque.webp';
+import imageHeroPortrait from './assets/hero-etudiante.webp';
+import imageRessources from './assets/ressources-etudiant-ordinateur.webp';
+import imageAPropos from './assets/a-propos-campus.webp';
+import imageNouveaute1 from './assets/nouveaute-bibliotheque.webp';
+import imageNouveaute2 from './assets/nouveaute-lycee.webp';
+import imageNouveaute3 from './assets/nouveaute-diplomes.webp';
+import imageCta from './assets/cta-etudiants-pelouse.webp';
 
 export const HERO = {
   surtitre: ['Apprendre', 'Réviser', 'Réussir'],
@@ -34,11 +35,18 @@ export const HERO = {
     secondaire: { libelle: 'Découvrir le concept', ancre: ANCRE_A_PROPOS }
   },
   annotation: ['Plus qu’une', 'simple', 'bibliothèque'],
-  image: {
-    src: imageHero, // IMAGE DE SUBSTITUTION
-    largeur: 1920,
-    hauteur: 1080,
-    alt: 'Étudiante souriante tenant ses livres devant un bâtiment universitaire'
+  // Étiquettes flottantes autour du portrait (décoratives).
+  etiquettes: [
+    { icone: 'examen', texte: 'Sujets & corrigés' },
+    { icone: 'pdf', texte: 'Lecture en PDF' }
+  ],
+  // Fond : décoratif (alt vide). Portrait : image principale, chargée en priorité.
+  fond: { src: imageHeroFond, largeur: 1920, hauteur: 1080 },
+  portrait: {
+    src: imageHeroPortrait,
+    largeur: 1000,
+    hauteur: 1250,
+    alt: 'Étudiante souriante, sac sur l’épaule et notes à la main, devant un bâtiment universitaire'
   }
 };
 
@@ -58,10 +66,10 @@ export const RESSOURCES = {
     'Des sujets du baccalauréat aux cours de licence, trouvez la ressource qui correspond à votre niveau et à votre filière.',
   bouton: { libelle: 'Voir toutes les ressources', to: cheminRecherche() },
   image: {
-    src: imageRessources, // IMAGE DE SUBSTITUTION
-    largeur: 960,
-    hauteur: 720,
-    alt: 'Deux étudiants révisant sur leurs ordinateurs dans une bibliothèque'
+    src: imageRessources,
+    largeur: 1200,
+    hauteur: 900,
+    alt: 'Étudiant concentré travaillant sur son ordinateur portable'
   },
   carteFlottante: {
     titre: 'Consultation en ligne',
@@ -100,10 +108,10 @@ export const A_PROPOS = {
   ],
   bouton: { libelle: 'Commencer une recherche', to: cheminRecherche() },
   image: {
-    src: imageAPropos, // IMAGE DE SUBSTITUTION
-    largeur: 960,
-    hauteur: 800,
-    alt: 'Bâtiment universitaire en brique et en verre, entouré d’arbres et d’une pelouse'
+    src: imageAPropos,
+    largeur: 1200,
+    hauteur: 1000,
+    alt: 'Deux étudiants, sac au dos, marchant vers un bâtiment universitaire'
   }
 };
 
@@ -115,7 +123,7 @@ export const NOUVEAUTES = {
   lienCarte: 'Consulter',
   nombre: 3,
   // Les ressources n'ont pas d'image dans l'API : une illustration par position.
-  images: [imageNouveaute1, imageNouveaute2, imageNouveaute3], // IMAGES DE SUBSTITUTION
+  images: [imageNouveaute1, imageNouveaute2, imageNouveaute3],
   vide: 'Aucune ressource pour le moment.'
 };
 
@@ -123,5 +131,5 @@ export const APPEL_A_L_ACTION = {
   titre: 'Cherchez. Consultez. Réussissez.',
   texte: 'Rejoignez les élèves et étudiants qui révisent avec les bonnes ressources.',
   bouton: { libelle: 'Lancer une recherche', to: cheminRecherche() },
-  image: imageCta // IMAGE DE SUBSTITUTION (décorative, en arrière-plan)
+  image: imageCta // décorative, en arrière-plan
 };

@@ -6,8 +6,9 @@
 // tout le contenu (textes, chiffres, liens) vient de ./landing.content.js.
 // Route déclarée en pleine largeur (handle.pleineLargeur dans app/router.jsx).
 // =============================================================================
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useProgressionDefilement } from '../../shared/hooks/useMouvement.js';
 import { A_PROPOS, APPEL_A_L_ACTION, CHIFFRES, HERO, NOUVEAUTES, RESSOURCES } from './landing.content.js';
 import { HeroSection } from './components/HeroSection.jsx';
 import { ChiffresCles } from './components/ChiffresCles.jsx';
@@ -29,11 +30,19 @@ function useDefilementVersAncre() {
   }, [hash]);
 }
 
+// Fine barre de progression de lecture, sous l'en-tête (décorative).
+function BarreProgression() {
+  const ref = useRef(null);
+  useProgressionDefilement(ref);
+  return <div ref={ref} className="barre-progression" aria-hidden="true" />;
+}
+
 export function LandingPage() {
   useDefilementVersAncre();
 
   return (
     <>
+      <BarreProgression />
       <HeroSection contenu={HERO} />
       <ChiffresCles contenu={CHIFFRES} />
       <RessourcesSection contenu={RESSOURCES} />

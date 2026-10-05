@@ -1,21 +1,26 @@
-# Images de la landing page — à remplacer
+# Images de la landing page
 
 Responsable : HIRWA Jean Baptiste.
 
-Les fichiers de ce dossier sont des **images de substitution** générées pour le projet (SVG, sans question de droits). Elles respectent les proportions de la maquette. Il faut les remplacer par les photos définitives, en vérifiant que l'on dispose bien des droits d'utilisation (BR10).
+Photos issues d'**Unsplash**, publiées sous la [licence Unsplash](https://unsplash.com/license) : utilisation gratuite, y compris commerciale, sans autorisation ni attribution obligatoire. La licence interdit seulement de revendre les photos telles quelles ou de les utiliser pour créer un service concurrent d'Unsplash. Les crédits sont donnés ci-dessous par courtoisie (BR10 : respect des droits d'utilisation).
 
-| Fichier actuel | Photo attendue | Proportions | Taille conseillée | Chargement |
+Seules des photos de la licence gratuite ont été retenues : aucune photo « Unsplash+ » (payante). Elles ont été recadrées et converties en WebP par le CDN d'Unsplash (qualité 72).
+
+| Fichier | Contenu | Photographe | Source | Format |
 |---|---|---|---|---|
-| `hero-campus-etudiante.svg` | Étudiante souriante tenant ses livres devant un bâtiment universitaire. **Le sujet doit être dans le tiers droit** : la moitié gauche est couverte par le voile vert et le texte. | 16:9 | 1920 × 1080 px, WebP | prioritaire |
-| `ressources-etudiants-revision.svg` | Deux étudiants révisant sur ordinateur dans une bibliothèque | 4:3 | 960 × 720 px, WebP | différé |
-| `a-propos-bibliotheque.svg` | Bâtiment universitaire ou bibliothèque, pelouse, étudiants | 6:5 (recadrée en hauteur) | 1200 × 1000 px, WebP | différé |
-| `nouveaute-1.svg` | Façade de bibliothèque | 16:10 | 800 × 500 px, WebP | différé |
-| `nouveaute-2.svg` | Groupe d'étudiants travaillant autour d'une table | 16:10 | 800 × 500 px, WebP | différé |
-| `nouveaute-3.svg` | Salle d'examen ou amphithéâtre | 16:10 | 800 × 500 px, WebP | différé |
-| `cta-etudiants-pelouse.svg` | Étudiants assis sur une pelouse de campus (arrière-plan du bandeau final, sous un voile sombre) | 3:1 | 1920 × 640 px, WebP | différé |
+| `hero-etudiante.webp` | Étudiante souriante devant un bâtiment universitaire | Oluwaseyi Akinlolu | [Unsplash dPQBwZ6d-NU](https://unsplash.com/photos/dPQBwZ6d-NU) | 1000 × 1250, chargée en priorité |
+| `hero-fond-bibliotheque.webp` | Bibliothèque moderne, étudiants aux tables (fond du hero, sous le voile vert) | Fer Troulik | [Unsplash ct1NZSUSWUc](https://unsplash.com/photos/ct1NZSUSWUc) | 1920 × 1080 |
+| `ressources-etudiant-ordinateur.webp` | Étudiant travaillant sur son ordinateur portable | Kojo Kwarteng | [Unsplash KUzlAah2dog](https://unsplash.com/photos/KUzlAah2dog) | 1200 × 900, différée |
+| `a-propos-campus.webp` | Deux étudiants marchant vers un bâtiment universitaire | The Jopwell Collection | [Unsplash 0UnuYI_HrTA](https://unsplash.com/photos/0UnuYI_HrTA) | 1200 × 1000, différée |
+| `nouveaute-bibliotheque.webp` | Étudiant lisant entre les rayonnages | Makmot Robin | [Unsplash QLSTZdXrBkE](https://unsplash.com/photos/QLSTZdXrBkE) | 800 × 500, différée |
+| `nouveaute-lycee.webp` | Salle de classe, élèves avec leurs manuels | Emmanuel Ikwuegbu | [Unsplash VC6MGt9ZoBA](https://unsplash.com/photos/VC6MGt9ZoBA) | 800 × 500, différée |
+| `nouveaute-diplomes.webp` | Deux diplômés en toge | Nqobile Vundla | [Unsplash zOt6a59k2BE](https://unsplash.com/photos/zOt6a59k2BE) | 800 × 500, différée |
+| `cta-etudiants-pelouse.webp` | Groupe d’étudiants assis sur une pelouse, vue aérienne (fond du bandeau final) | Callum Blacoe | [Unsplash Qjl7ylxNMLE](https://unsplash.com/photos/Qjl7ylxNMLE) | 1440 × 540 (qualité 40 : fond sous un voile sombre), différée |
 
-## Procédure de remplacement
+## Remplacer une photo
 
-1. Déposer la photo dans ce dossier, par exemple `hero-campus-etudiante.webp` (qualité 75 à 80 suffit).
-2. Mettre à jour l'import correspondant dans `../landing.content.js`, ainsi que `largeur` et `hauteur` si elles changent.
-3. Supprimer le fichier SVG de substitution.
+1. Choisir une photo dont on a les droits : licence Unsplash (pas Unsplash+), Pexels, ou photo de l'établissement avec l'accord des personnes photographiées.
+2. La recadrer aux mêmes proportions et l'exporter en WebP (qualité 70 à 80).
+3. La déposer dans ce dossier, mettre à jour l'import dans `../landing.content.js` (ainsi que `largeur` et `hauteur`), puis compléter le tableau ci-dessus.
+
+Pour le hero, le portrait doit garder le visage dans le tiers supérieur : il est recadré automatiquement (`object-position: 50% 22%`).

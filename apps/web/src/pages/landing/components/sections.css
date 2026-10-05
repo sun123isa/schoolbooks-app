@@ -1,6 +1,9 @@
 /* =============================================================================
    Landing page — sections sous le hero
    Responsable : HIRWA Jean Baptiste
+   Les animations d'entrée se déclenchent quand le parent <Reveal> devient
+   visible (.reveal--visible) ; les animations continues (flottement, halo)
+   sont neutralisées par prefers-reduced-motion (index.css).
    ============================================================================= */
 
 .landing-section {
@@ -9,6 +12,20 @@
 
 .landing-section--alt {
   background: var(--color-bg-alt);
+}
+
+/* Barre de progression de lecture, collée sous l'en-tête. */
+.barre-progression {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  z-index: 49;
+  height: 3px;
+  background: var(--color-primary-light);
+  transform: scaleX(var(--progression, 0));
+  transform-origin: left;
+  pointer-events: none;
 }
 
 /* --- Sur-titre et en-tête de section ---------------------------------------- */
@@ -29,6 +46,8 @@
   height: 6px;
   border-radius: 50%;
   background: currentColor;
+  box-shadow: 0 0 0 0 currentColor;
+  animation: point-signal 2.6s ease-out infinite;
 }
 
 .surtitre--sombre {
@@ -71,7 +90,7 @@
 .lien-fleche svg {
   width: 16px;
   height: 16px;
-  transition: transform var(--transition-fast);
+  transition: transform var(--transition-base);
 }
 
 .lien-fleche:hover {
@@ -79,7 +98,7 @@
 }
 
 .lien-fleche:hover svg {
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
 /* --- Nos ressources ------------------------------------------------------------ */
@@ -103,7 +122,7 @@
   padding: 18px 0 0 18px;
 }
 
-/* Bande verte décorative derrière la photo. */
+/* Bande verte décorative derrière la photo : glisse en place à l'apparition. */
 .ressources__shape {
   position: absolute;
   top: 0;
@@ -116,14 +135,43 @@
   transform-origin: bottom left;
 }
 
-.ressources__image {
+.reveal--visible .ressources__shape {
+  animation: forme-entree 1100ms var(--ease-out) 200ms both;
+}
+
+/* Trame de points en bas à droite, qui dérive lentement. */
+.ressources__points {
+  position: absolute;
+  right: -22px;
+  bottom: -22px;
+  width: 120px;
+  height: 120px;
+  background-image: radial-gradient(var(--color-primary-tint) 2px, transparent 2.5px);
+  background-size: 16px 16px;
+  animation: deriver 9s ease-in-out infinite;
+}
+
+.ressources__cadre {
   position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.ressources__image {
   width: 100%;
   height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
+  transition: transform 1200ms var(--ease-out);
+}
+
+.reveal--cache .ressources__image {
+  transform: scale(1.15);
+}
+
+.ressources__media:hover .ressources__image {
+  transform: scale(1.04);
 }
 
 .ressources__float {
@@ -137,6 +185,17 @@
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow: var(--shadow-lg);
+  animation: flotter 5s ease-in-out infinite;
+}
+
+.reveal--cache .ressources__float {
+  opacity: 0;
+}
+
+.reveal--visible .ressources__float {
+  animation:
+    etiquette-entree 800ms var(--ease-spring) 700ms both,
+    flotter 5s ease-in-out 1500ms infinite;
 }
 
 .ressources__float-title {
@@ -151,6 +210,7 @@
 }
 
 .ressources__float-btn {
+  position: relative;
   display: inline-grid;
   place-items: center;
   width: 42px;
@@ -158,11 +218,23 @@
   border-radius: 50%;
   background: var(--color-primary);
   color: var(--color-on-primary);
-  transition: background-color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-base) var(--ease-spring);
+}
+
+.ressources__float-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary);
+  animation: onde 2.4s var(--ease-out) infinite;
 }
 
 .ressources__float-btn:hover {
   background: var(--color-primary-hover);
+  transform: scale(1.1) rotate(-45deg);
 }
 
 .ressources__float-btn svg {
@@ -170,6 +242,7 @@
   height: 18px;
 }
 
+/* Cartes par type de document. */
 .types-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -183,42 +256,69 @@
 }
 
 .type-card {
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: column;
+  overflow: hidden;
   padding: 22px 20px 24px;
   border: 1px solid var(--color-primary-tint);
   border-radius: var(--radius-lg);
   background: var(--color-primary-soft);
   text-decoration: none;
+  isolation: isolate;
   transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast),
-    border-color var(--transition-fast);
+    transform var(--transition-base) var(--ease-out),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+}
+
+/* Reflet qui balaie la carte au survol. */
+.type-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--reflet);
+  transform: translateX(-120%);
+  transition: transform 800ms var(--ease-out);
 }
 
 .type-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-6px);
   border-color: var(--color-primary);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.type-card:hover::after {
+  transform: translateX(120%);
 }
 
 .type-card__icon {
   display: inline-grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   margin-bottom: 18px;
   border: 1px solid var(--color-primary-tint);
-  border-radius: var(--radius-md);
+  border-radius: 14px;
   background: var(--color-surface);
   color: var(--color-primary);
+  transition:
+    transform 450ms var(--ease-spring),
+    background-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.type-card:hover .type-card__icon {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  transform: rotate(-8deg) scale(1.08);
 }
 
 .type-card__icon svg {
-  width: 22px;
-  height: 22px;
-  stroke-width: 1.6;
+  width: 28px;
+  height: 28px;
 }
 
 .type-card__title {
@@ -236,6 +336,26 @@
   color: var(--color-text-muted);
 }
 
+.type-card__arrow {
+  position: absolute;
+  top: 22px;
+  right: 20px;
+  width: 18px;
+  height: 18px;
+  color: var(--color-primary);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-base);
+}
+
+.type-card:hover .type-card__arrow,
+.type-card:focus-visible .type-card__arrow {
+  opacity: 1;
+  transform: none;
+}
+
 /* --- À propos (photo + panneau vert foncé) ------------------------------------- */
 .a-propos {
   display: grid;
@@ -249,16 +369,20 @@
 
 .a-propos__media {
   position: relative;
-  min-height: 420px;
+  overflow: hidden;
+  min-height: 460px;
 }
 
+/* Photo plus haute que son cadre : la marge absorbe la parallaxe. */
 .a-propos__image {
   position: absolute;
-  inset: 0;
+  inset: -12% 0;
   width: 100%;
-  height: 100%;
+  height: 124%;
   max-width: none;
   object-fit: cover;
+  transform: translateY(var(--parallaxe, 0px));
+  will-change: transform;
 }
 
 .a-propos__panel {
@@ -301,12 +425,31 @@
   color: var(--color-on-primary);
 }
 
-.a-propos__atout svg {
+.a-propos__atout-icone {
+  display: inline-grid;
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  stroke-width: 1.5;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-line-on-dark);
+  border-radius: 12px;
+  background: var(--color-hover-on-dark);
   color: var(--color-accent);
+  transition: transform 450ms var(--ease-spring);
+}
+
+.reveal--visible .a-propos__atout-icone {
+  animation: icone-pop 700ms var(--ease-spring) both;
+  animation-delay: calc(500ms + var(--j, 0) * 140ms);
+}
+
+.a-propos__atout:hover .a-propos__atout-icone {
+  transform: translateY(-3px) rotate(-8deg);
+}
+
+.a-propos__atout-icone svg {
+  width: 24px;
+  height: 24px;
 }
 
 .a-propos :focus-visible {
@@ -345,18 +488,23 @@
   background: var(--color-surface);
   box-shadow: var(--shadow-sm);
   transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast);
+    transform var(--transition-base) var(--ease-out),
+    box-shadow var(--transition-base);
 }
 
 .news-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
 }
 
 .news-card:focus-within {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
+}
+
+.news-card__media {
+  position: relative;
+  overflow: hidden;
 }
 
 .news-card__image {
@@ -365,6 +513,24 @@
   aspect-ratio: 16 / 10;
   object-fit: cover;
   background: var(--color-chip);
+  transition: transform 900ms var(--ease-out);
+}
+
+.news-card:hover .news-card__image {
+  transform: scale(1.08);
+}
+
+.news-card__badge {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .news-card__body {
@@ -416,18 +582,33 @@
 .news-card__more svg {
   width: 15px;
   height: 15px;
+  transition: transform var(--transition-base);
 }
 
-/* Squelette pendant le chargement. */
+.news-card:hover .news-card__more svg {
+  transform: translateX(5px);
+}
+
+/* Squelette pendant le chargement (reflet qui balaie). */
+.news-card--squelette .news-card__image {
+  aspect-ratio: 16 / 10;
+}
+
 .news-card--squelette .news-card__body {
   gap: 12px;
+}
+
+.squelette,
+.news-card--squelette .news-card__image {
+  background: var(--degrade-squelette);
+  background-size: 200% 100%;
+  animation: chatoiement 1.4s linear infinite;
 }
 
 .squelette {
   display: block;
   height: 12px;
   border-radius: var(--radius-sm);
-  background: var(--color-chip);
 }
 
 .squelette--court {
@@ -448,12 +629,14 @@
 
 .cta__image {
   position: absolute;
-  inset: 0;
+  inset: -15% 0;
   z-index: -2;
   width: 100%;
-  height: 100%;
+  height: 130%;
   max-width: none;
   object-fit: cover;
+  transform: translateY(var(--parallaxe, 0px));
+  will-change: transform;
 }
 
 .cta::before {
@@ -468,7 +651,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-block: clamp(80px, 9vw, 120px);
+  padding-block: clamp(80px, 9vw, 128px);
   text-align: center;
 }
 
@@ -478,13 +661,80 @@
   color: var(--color-on-primary);
 }
 
+.cta__mot {
+  display: inline-block;
+  white-space: pre;
+}
+
+.reveal--visible .cta__mot {
+  animation: mot-entree 900ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 160ms);
+}
+
 .cta__text {
   margin-block: 14px 30px;
   color: var(--color-on-primary-muted);
 }
 
+.reveal--visible .cta__text {
+  animation: entree-monter 800ms var(--ease-out) 500ms both;
+}
+
+.reveal--visible .cta__button {
+  animation:
+    entree-monter 800ms var(--ease-out) 700ms both,
+    halo 2.8s ease-out 1600ms infinite;
+}
+
 .cta :focus-visible {
   outline-color: var(--color-focus-on-dark);
+}
+
+/* --- Animations ------------------------------------------------------------------ */
+@keyframes point-signal {
+  0% {
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+@keyframes forme-entree {
+  from {
+    opacity: 0;
+    transform: skewX(-8deg) translate(-40px, 40px);
+  }
+}
+
+@keyframes deriver {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: -10px -10px;
+  }
+}
+
+@keyframes chatoiement {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@keyframes halo {
+  0% {
+    box-shadow: 0 0 0 0 var(--halo-primaire);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 18px transparent;
+  }
 }
 
 /* --- Responsive --------------------------------------------------------------------- */
@@ -527,6 +777,10 @@
   .ressources__float {
     left: 12px;
     right: 12px;
+  }
+
+  .ressources__points {
+    display: none;
   }
 
   .a-propos__atouts {
