@@ -1,5 +1,7 @@
 // Tests de la page de consultation : formatage, fiche, règle de téléchargement (BR08), zoom.
 // Responsable : Karene MOUSSOUNDA — relecture : Salem KONGOLO
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { RESSOURCES } from '@schoolbooks/shared/mocks';
 import {
@@ -11,6 +13,7 @@ import {
   peutTelecharger,
   zoomSuivant
 } from './ressource.content.js';
+import { PDF_MOCK } from './ressource.api.js';
 
 const trouver = (fragment) => RESSOURCES.find((r) => r.titre.includes(fragment));
 
@@ -71,6 +74,15 @@ describe('zoomSuivant', () => {
     expect(zoomSuivant(1, -1)).toBe(0.8);
     expect(zoomSuivant(ZOOM_MAX, 1)).toBe(ZOOM_MAX);
     expect(zoomSuivant(ZOOM_MIN, -1)).toBe(ZOOM_MIN);
+  });
+});
+
+describe('PDF du mode mock', () => {
+  it('chaque PDF déclaré existe et correspond à une ressource du catalogue', () => {
+    for (const [id, chemin] of Object.entries(PDF_MOCK)) {
+      expect(RESSOURCES.some((r) => r.id === id), id).toBe(true);
+      expect(existsSync(fileURLToPath(new URL(`../../../public${chemin}`, import.meta.url))), chemin).toBe(true);
+    }
   });
 });
 
