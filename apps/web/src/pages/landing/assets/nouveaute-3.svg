@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" preserveAspectRatio="xMidYMid slice">
+<!-- IMAGE DE SUBSTITUTION (ScolaRead) : salle d’examen ou amphithéâtre, étudiants concentrés (16:10). À remplacer par la photo définitive, mêmes proportions (voir README.md). -->
+<rect width="800" height="500" fill="#d8d2c4"/><rect width="800" height="160" fill="#f0ece3"/><g transform="translate(90 130) scale(0.62)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#7f8c8d"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#a8714c"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#a8714c"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(245 130) scale(0.62)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#7f8c8d"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#6b4429"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#6b4429"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(400 130) scale(0.62)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#2c3e50"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#6b4429"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#6b4429"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(555 130) scale(0.62)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#34495e"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#6b4429"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#6b4429"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(710 130) scale(0.62)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#2c3e50"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#8d5a3b"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#8d5a3b"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(110 240) scale(0.74)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#7f8c8d"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#6b4429"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#6b4429"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(265 240) scale(0.74)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#7f8c8d"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#6b4429"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#6b4429"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(420 240) scale(0.74)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#7f8c8d"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#8d5a3b"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#8d5a3b"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(575 240) scale(0.74)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#2c3e50"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#6b4429"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#6b4429"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(730 240) scale(0.74)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#8e44ad"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#6b4429"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#6b4429"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(130 350) scale(0.86)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#7f8c8d"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#8d5a3b"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#8d5a3b"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(285 350) scale(0.86)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#7f8c8d"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#8d5a3b"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#8d5a3b"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(440 350) scale(0.86)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#2c3e50"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#6b4429"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#6b4429"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(595 350) scale(0.86)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#2c3e50"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#a8714c"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#a8714c"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><g transform="translate(750 350) scale(0.86)">
+  <path d="M-60 200 Q-58 90 0 80 Q58 90 60 200 Z" fill="#8e44ad"/>
+  <rect x="-12" y="52" width="24" height="34" fill="#8d5a3b"/>
+  <ellipse cx="0" cy="30" rx="26" ry="32" fill="#8d5a3b"/>
+  <path d="M-28 30 Q-30 -8 0 -6 Q32 -8 28 34 Q22 6 0 8 Q-20 8 -28 30Z" fill="#1c120c"/>
+</g><rect y="440" width="800" height="60" fill="#8a6240"/>
+</svg>
