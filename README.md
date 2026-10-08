@@ -1109,7 +1109,3 @@ Content-Disposition: attachment
 ```
 
 ---
-
-## Licence
-
-La licence du projet doit être définie par l'équipe.
