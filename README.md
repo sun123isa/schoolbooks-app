@@ -299,7 +299,7 @@ Pourquoi un proxy `/api` : le navigateur ne parle qu'au domaine du site, donc le
 
 | Rôle | Personne | Responsabilité |
 |---|---|---|
-| Lead Projet (PM) | **Gloire MASSENGO** | Planifier, suivre l'avancement, coordonner l'équipe |
+| Lead Projet (PM) | **Emmanuel MASSENGO** | Planifier, suivre l'avancement, coordonner l'équipe |
 | Lead Dev | **HIRWA Jean Baptiste** | Définir l'architecture, encadrer les développeurs, résoudre les problèmes techniques |
 | Lead Repo | **Isaac LELO MAKAYA** | Gérer le dépôt, les branches, les PR, les conventions Git et le CI/CD |
 | Lead Reviewer | **Salem KONGOLO** | Qualité du code, relecture des PR, détection des bugs, validation des merges |
@@ -313,9 +313,26 @@ Pourquoi un proxy `/api` : le navigateur ne parle qu'au domaine du site, donc le
 | Salem KONGOLO | Backend | Recherche et filtrage |
 | Emmanuel AYA | Backend | Ressources, fichiers PDF, catalogue |
 
+> Les deux tableaux ci-dessus décrivent la **répartition prévue** au lancement du projet. La participation réelle est détaillée ci-dessous.
+
+### Bilan de participation
+
+| Rôle | Personne | Statut | Contribution |
+|---|---|---|---|
+| Product Manager | **Emmanuel MASSENGO** | Partiel | Tâches de cadrage réalisées, puis plus aucun retour. Aucun suivi du projet, aucune vérification du produit par rapport à l'étude et au MVP. |
+| Business Analyst | **Lys MBAMA** | Réalisé | Tous les documents produits. Accompagnement de l'équipe pendant tout le cycle de production. |
+| Développeur frontend | **HIRWA Jean Baptiste** | Réalisé | Tout le frontend, plus la fusion back / front, la review du code, les tests et le déploiement. |
+| Développeur backend | **Isaac LELO MAKAYA** | Réalisé | Tout le backend et l'ensemble des API. |
+| Développeur backend | **Salem KONGOLO** | Partiel | Environ la moitié du travail réalisée avant son départ. Travail non retenu dans cette version. |
+| Développeurs | 3 autres développeurs | Non réalisé | Aucune participation au projet. |
+
+> Conséquence : les périmètres attribués aux développeurs qui n'ont pas participé (§ 5) ont été réalisés par HIRWA Jean Baptiste (frontend) et Isaac LELO MAKAYA (backend). Les mentions « Responsable » en tête des fichiers reflètent la répartition prévue, pas forcément l'auteur effectif.
+
 ---
 
 ## 5. Délégation des responsabilités
+
+> **Plan initial.** Cette section décrit la délégation prévue au lancement. Pour la réalisation effective, voir le [bilan de participation](#bilan-de-participation).
 
 Chaque responsabilité correspond à **un dossier**. On ne modifie le dossier d'un autre qu'avec son accord : il est automatiquement demandé en relecture via `CODEOWNERS`. Les fichiers squelettes portent en en-tête leur responsable, leur périmètre et une liste `TODO`.
 
