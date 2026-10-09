@@ -18,17 +18,30 @@ export async function obtenirRessource(req, res) {
   res.json({ success: true, data: await service.obtenirRessource(req.valid.params.id) });
 }
 
-export async function consulterFichier(req, res) {
+export async function consulterFichier(req, res, next) {
   const fichier = await service.obtenirFichierConsultable(req.valid.params.id);
   res.set({
     ...ENTETES_FICHIER,
     'Content-Disposition': `inline; filename="${fichier.nomFichier}"`
   });
-  res.sendFile(fichier.cheminAbsolu);
+  res.sendFile(fichier.cheminAbsolu, (err) => {
+    if (err && !res.headersSent) next(err);
+  });
 }
 
-export async function telechargerFichier(req, res) {
-  const fichier = await service.obtenirFichierTelechargeable(req.valid.params.id);
+export async function telechargerFichier(req, res, next) {
+  const { id } = req.valid.params;
+  const fichier = await service.obtenirFichierTelechargeable(id);
   res.set(ENTETES_FICHIER);
-  res.download(fichier.cheminAbsolu, fichier.nomFichier);
+  res.download(fichier.cheminAbsolu, fichier.nomFichier, (err) => {
+    if (err) {
+      if (!res.headersSent) next(err);
+      return;
+    }
+    // Compteur incrémenté uniquement après un envoi complet ; un échec du
+    // compteur ne doit pas transformer un téléchargement réussi en erreur.
+    service.enregistrerTelechargement(id).catch((error) => {
+      console.error('Compteur de téléchargements non mis à jour :', error.message);
+    });
+  });
 }

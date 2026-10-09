@@ -1,98 +1,63 @@
 // =============================================================================
-// Module BOOKS (historique, antérieur au MVP « ressources ») — /api/books
-// Responsable : Emmanuel AYA (catalogue) — relecture : Salem KONGOLO
-// Code conservé tel quel. Les nouvelles fonctionnalités passent par les modules
-// referentiels, recherche et ressources. POST /api/books (upload) est hors MVP
-// pour les utilisateurs : il pourra servir de base à l'intégration au catalogue.
+// Module BOOKS — routes, montées sur /api/books dans app.js
+// Public (session facultative : un formateur voit aussi ses livres désactivés) :
+//   GET    /api/books                         catalogue : q, niveau, matiere, page, limit, tri
+//   GET    /api/books/:id                     fiche d'un livre
+// Connecté (apprenant ou formateur) :
+//   GET    /api/uploads/books/:fileName       lecture du PDF dans le navigateur
+//   GET    /api/books/:id/download            téléchargement (compteur incrémenté)
+// Formateur uniquement (et propriétaire du livre) :
+//   GET    /api/books/trainer/mine            ses livres + statistiques du tableau de bord
+//   POST   /api/books                         création (multipart, PDF dans « fichier »)
+//   PATCH  /api/books/trainer/:id             modification (multipart, PDF facultatif)
+//   DELETE /api/books/trainer/:id             désactivation
+//   PATCH  /api/books/trainer/:id/restore     restauration
+//   DELETE /api/books/trainer/:id/permanent   suppression définitive
+// La lecture du PDF dans le navigateur passe par /api/uploads/books/:fileName
+// (uploadsRouter ci-dessous, monté sur /api/uploads/books).
 // =============================================================================
 import express from 'express';
-import multer from 'multer';
-import { v4 as uuidv4 } from 'uuid';
 import {
-  listBooksController,
-  getBookController,
-  downloadBookController,
-  createBookController
-} from './books.controller.js';
-import {
-    validateParams,
-  validateBody,
-  bookIdParamsSchema,
-  createBookBodySchema
-} from './books.validator.js';
+  CreationLivreSchema,
+  LivreIdParamsSchema,
+  LivresQuerySchema,
+  ModificationLivreSchema,
+  NomFichierLivreParamsSchema,
+  ROLES
+} from '@schoolbooks/shared';
+import { validate } from '../../middlewares/validate.middleware.js';
+import { authentificationFacultative, authentifier, exigerRole } from '../../middlewares/auth.middleware.js';
+import { recevoirPdf } from './books.upload.js';
+import * as controller from './books.controller.js';
 
 const router = express.Router();
+const formateur = exigerRole(ROLES.formateur);
+const validerId = validate({ params: LivreIdParamsSchema });
 
-// Configuration de multer pour l'upload de PDF.
-// On utilise diskStorage pour enregistrer les fichiers sur le disque.
-const storage = multer.diskStorage({
-  // Destination des fichiers uploadés.
-  destination: (req, file, cb) => {
-    // Dossier où seront stockés les PDF des livres.
-    const uploadDir = 'uploads/books';
-    cb(null, uploadDir);
-  },
-  // Nom du fichier : on génère un UUID + extension .pdf.
-  // On ne fait jamais confiance au nom original envoyé par le client.
-  filename: (req, file, cb) => {
-    const uniqueName = `${uuidv4()}.pdf`;
-    cb(null, uniqueName);
-  }
-});
-
-// Filtre pour n'accepter que les PDF.
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'application/pdf') {
-    cb(null, true);
-  } else {
-    const err = new Error('Seuls les fichiers PDF sont autorisés');
-    err.status = 400;
-    err.code = 'INVALID_FILE_TYPE';
-    cb(err, false);
-  }
-};
-
-// Instance de multer avec limites de taille.
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: {
-    // Taille maximale : 25 Mo.
-    fileSize: 25 * 1024 * 1024
-  }
-});
-
-// GET /api/books
-// Liste les livres avec filtres optionnels.
-router.get(
-  '/',
-  listBooksController
+// Espace formateur — déclaré AVANT /:id pour que « trainer » ne soit pas lu comme un id.
+router.get('/trainer/mine', formateur, controller.mesLivres);
+router.patch(
+  '/trainer/:id',
+  formateur,
+  validerId,
+  recevoirPdf,
+  validate({ body: ModificationLivreSchema }),
+  controller.modifierLivre
 );
+router.delete('/trainer/:id', formateur, validerId, controller.desactiverLivre);
+router.patch('/trainer/:id/restore', formateur, validerId, controller.restaurerLivre);
+router.delete('/trainer/:id/permanent', formateur, validerId, controller.supprimerDefinitivement);
 
-// GET /api/books/:id
-// Récupère un livre par son ID.
-router.get(
-  '/:id',
-  validateParams(bookIdParamsSchema),
-  getBookController
-);
+router.post('/', formateur, recevoirPdf, validate({ body: CreationLivreSchema }), controller.creerLivre);
 
-// GET /api/books/:id/download
-// Télécharge le PDF du livre.
-router.get(
-  '/:id/download',
-  validateParams(bookIdParamsSchema),
-  downloadBookController
-);
-
-// POST /api/books
-// Crée un nouveau livre avec upload de PDF.
-// Le champ du formulaire doit s'appeler "file".
-router.post(
-  '/',
-  upload.single('file'),
-  validateBody(createBookBodySchema),
-  createBookController
-);
+// Public
+router.get('/', validate({ query: LivresQuerySchema }), controller.listerLivres);
+router.get('/:id', validerId, authentificationFacultative, controller.obtenirLivre);
+router.get('/:id/download', validerId, authentifier, controller.telecharger);
 
 export default router;
+
+// GET /api/uploads/books/:fileName — PDF lu dans le navigateur (jamais de service statique).
+export const uploadsRouter = express.Router();
+// Lecture réservée aux comptes connectés (apprenant ou formateur).
+uploadsRouter.get('/:fileName', validate({ params: NomFichierLivreParamsSchema }), authentifier, controller.lireFichier);

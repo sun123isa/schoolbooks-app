@@ -1,30 +1,21 @@
 // =============================================================================
 // Module RESSOURCES — service
 // Responsable : Emmanuel AYA — relecture : Salem KONGOLO
-// ÉTAT : SQUELETTE — détail issu des mocks, fichier = PDF d'exemple (fixtures/).
-// TODO (Emmanuel) :
-//   1. implémenter ressources.repository.js et remplacer trouverRessourceMock ;
-//   2. calculer `disponible` en vérifiant que le fichier existe et est lisible
-//      dans le stockage (storage.js) — BR06 ;
-//   3. servir le vrai fichier (books.file_path) au lieu de la fixture ;
-//   4. ne jamais exposer file_path ni le chemin disque dans les réponses ;
-//   5. incrémenter books.download_count après un téléchargement réussi.
+// Détail d'une ressource (RessourceDetailSchema), consultation et téléchargement
+// du PDF stocké sous STORAGE_DIR (storage.js).
+//   - BR06 : `disponible` = fichier présent et lisible ; sinon 404 FICHIER_INDISPONIBLE ;
+//   - BR08 : téléchargement réservé aux ressources téléchargeables (sinon 403) ;
+//   - BR10 : file_path et chemin disque ne sont jamais renvoyés au client.
 // =============================================================================
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { ERROR_CODES } from '@schoolbooks/shared';
-import { trouverRessourceMock } from '@schoolbooks/shared/mocks';
+import { API_PREFIX, API_ROUTES, ERROR_CODES } from '@schoolbooks/shared';
 import { HttpError } from '../../utils/http-error.js';
-
-const FICHIER_EXEMPLE = path.join(
-  path.dirname(fileURLToPath(import.meta.url)),
-  'fixtures',
-  'exemple.pdf'
-);
+import * as repository from './ressources.repository.js';
+import { versResume } from './ressource.sql.js';
+import { fichierLisible, resoudreChemin } from './storage.js';
 
 // Nom proposé au navigateur : dérivé du titre, sans caractère problématique.
-function nomDeFichier(ressource) {
-  const base = ressource.titre
+function nomDeFichier(titre) {
+  const base = titre
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
     .replace(/[^a-zA-Z0-9]+/g, '-')
@@ -34,29 +25,59 @@ function nomDeFichier(ressource) {
 }
 
 // RESSOURCE_INTROUVABLE (404) si l'id est inconnu ou la ressource retirée.
-export async function obtenirRessource(id) {
-  const ressource = trouverRessourceMock(id);
-  if (!ressource) {
+async function trouverLigne(id) {
+  const ligne = await repository.findRessourceById(id);
+  if (!ligne) {
     throw new HttpError(404, ERROR_CODES.RESSOURCE_INTROUVABLE, "Cette ressource n'existe pas ou n'est plus disponible.");
   }
-  return ressource;
+  return ligne;
+}
+
+export async function obtenirRessource(id) {
+  const ligne = await trouverLigne(id);
+  const disponible = await fichierLisible(ligne.file_path);
+  const telechargeable = ligne.is_downloadable;
+
+  return {
+    ...versResume(ligne),
+    description: ligne.description ?? null,
+    auteur: ligne.author ?? null,
+    // BIGINT est renvoyé en chaîne par pg : conversion explicite.
+    tailleOctets: ligne.file_size === null ? null : Number(ligne.file_size),
+    disponible,
+    droits: ligne.usage_rights ?? null,
+    dateAjout: new Date(ligne.created_at).toISOString(),
+    urls: {
+      fichier: disponible ? `${API_PREFIX}${API_ROUTES.fichier(ligne.id)}` : null,
+      telechargement: disponible && telechargeable ? `${API_PREFIX}${API_ROUTES.telechargement(ligne.id)}` : null
+    }
+  };
 }
 
 // BR06 — FICHIER_INDISPONIBLE (404) si le PDF ne peut pas être ouvert.
-export async function obtenirFichierConsultable(id) {
-  const ressource = await obtenirRessource(id);
-  if (!ressource.disponible) {
+async function fichierDe(ligne) {
+  if (!(await fichierLisible(ligne.file_path))) {
     throw new HttpError(404, ERROR_CODES.FICHIER_INDISPONIBLE, 'Le document PDF de cette ressource est inaccessible.');
   }
-  return { cheminAbsolu: FICHIER_EXEMPLE, nomFichier: nomDeFichier(ressource) };
+  return { cheminAbsolu: resoudreChemin(ligne.file_path), nomFichier: nomDeFichier(ligne.title) };
+}
+
+export async function obtenirFichierConsultable(id) {
+  return fichierDe(await trouverLigne(id));
 }
 
 // BR08 — TELECHARGEMENT_NON_AUTORISE (403) si la ressource n'est pas téléchargeable.
+// Le droit est vérifié avant le fichier : une ressource non téléchargeable
+// répond toujours 403, que son fichier soit présent ou non.
 export async function obtenirFichierTelechargeable(id) {
-  const fichier = await obtenirFichierConsultable(id);
-  const ressource = await obtenirRessource(id);
-  if (!ressource.telechargeable) {
+  const ligne = await trouverLigne(id);
+  if (!ligne.is_downloadable) {
     throw new HttpError(403, ERROR_CODES.TELECHARGEMENT_NON_AUTORISE, "Cette ressource est consultable en ligne mais n'est pas téléchargeable.");
   }
-  return fichier;
+  return fichierDe(ligne);
+}
+
+// Appelé après un envoi réussi du fichier en pièce jointe.
+export async function enregistrerTelechargement(id) {
+  await repository.incrementerTelechargements(id);
 }

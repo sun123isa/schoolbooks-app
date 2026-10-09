@@ -1,155 +1,70 @@
 // =============================================================================
-// Module BOOKS (historique, antérieur au MVP « ressources ») — /api/books
-// Responsable : Emmanuel AYA (catalogue) — relecture : Salem KONGOLO
-// Code conservé tel quel. Les nouvelles fonctionnalités passent par les modules
-// referentiels, recherche et ressources. POST /api/books (upload) est hors MVP
-// pour les utilisateurs : il pourra servir de base à l'intégration au catalogue.
+// Module BOOKS — contrôleurs (HTTP uniquement)
+// JSON : { success: true, data } ; fichiers : flux PDF binaire.
 // =============================================================================
-import path from 'path';
-import fs from 'fs/promises';
-import { createReadStream } from 'fs';
-import { fileURLToPath } from 'url';
-import * as booksService from './books.service.js';
+import * as service from './books.service.js';
 
-// __dirname en ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Pas de mise en cache partagée, pas d'interprétation du contenu (protection des documents).
+const ENTETES_FICHIER = {
+  'Content-Type': 'application/pdf',
+  'Cache-Control': 'private, no-store',
+  'X-Content-Type-Options': 'nosniff'
+};
 
-// GET /api/books
-// Liste les livres avec filtres optionnels (level, subject, q).
-export async function listBooksController(req, res, next) {
-  try {
-    // On récupère les query params bruts.
-    const rawQuery = req.query || {};
+const repondre = (res, data, status = 200) => res.status(status).json({ success: true, data });
 
-    // Validation très simple : on ne garde que des chaînes ou undefined.
-    const level =
-      typeof rawQuery.level === 'string' && rawQuery.level.trim() !== ''
-        ? rawQuery.level.trim()
-        : undefined;
-
-    const subject =
-      typeof rawQuery.subject === 'string' && rawQuery.subject.trim() !== ''
-        ? rawQuery.subject.trim()
-        : undefined;
-
-    const q =
-      typeof rawQuery.q === 'string' && rawQuery.q.trim() !== ''
-        ? rawQuery.q.trim()
-        : undefined;
-
-    const books = await booksService.listBooks({ level, subject, q });
-
-    res.json({
-      success: true,
-      data: {
-        items: books,
-        count: books.length
-      }
-    });
-  } catch (error) {
-    next(error);
-  }
+export async function listerLivres(req, res) {
+  repondre(res, await service.listerLivres(req.valid.query));
 }
 
-// GET /api/books/:id
-// Récupère les détails d'un livre.
-export async function getBookController(req, res, next) {
-  try {
-    const { id } = req.params;
-
-    const book = await booksService.getBookById(id);
-
-    res.json({
-      success: true,
-      data: book
-    });
-  } catch (error) {
-    next(error);
-  }
+export async function obtenirLivre(req, res) {
+  repondre(res, await service.obtenirLivre(req.valid.params.id, req.utilisateur));
 }
 
-// GET /api/books/:id/download
-// Télécharge le fichier PDF du livre.
-export async function downloadBookController(req, res, next) {
-  try {
-    const { id } = req.params;
+export async function lireFichier(req, res, next) {
+  const fichier = await service.obtenirFichierUpload(req.valid.params.fileName, req.utilisateur);
+  res.set({ ...ENTETES_FICHIER, 'Content-Disposition': `inline; filename="${fichier.nomFichier}"` });
+  res.sendFile(fichier.cheminAbsolu, (err) => {
+    if (err && !res.headersSent) next(err);
+  });
+}
 
-    // On récupère le livre pour avoir son file_path.
-    const book = await booksService.getBookById(id);
-
-    // Chemin absolu vers le fichier PDF.
-    const rootDir = path.resolve(__dirname, '../../../');
-    const filePath = path.join(rootDir, book.file_path);
-
-    // Vérifie que le fichier existe.
-    try {
-      await fs.access(filePath);
-    } catch {
-      const err = new Error('Fichier non trouvé sur le serveur');
-      err.status = 404;
-      err.code = 'FILE_NOT_FOUND';
-      throw err;
+export async function telecharger(req, res, next) {
+  const { id } = req.valid.params;
+  const fichier = await service.obtenirFichierTelechargeable(id, req.utilisateur);
+  res.set(ENTETES_FICHIER);
+  res.download(fichier.cheminAbsolu, fichier.nomFichier, (err) => {
+    if (err) {
+      if (!res.headersSent) next(err);
+      return;
     }
-
-    // Incrémenter le compteur de téléchargements.
-    await booksService.incrementDownloadCount(id);
-
-    // Envoi du fichier avec les bons en-têtes.
-    res.setHeader('Content-Type', book.mime_type || 'application/pdf');
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename="${book.file_name}"`
-    );
-
-    const fileStream = createReadStream(filePath);
-    fileStream.pipe(res);
-  } catch (error) {
-    next(error);
-  }
+    // Compteur incrémenté uniquement après un envoi complet.
+    service.enregistrerTelechargement(id).catch((error) => {
+      console.error('Compteur de téléchargements non mis à jour :', error.message);
+    });
+  });
 }
 
-// POST /api/books
-// Crée un nouveau livre (avec upload de PDF).
-export async function createBookController(req, res, next) {
-  try {
-    // req.file vient de multer (fichier PDF uploadé).
-    // req.body vient du formulaire (champs texte).
-    const { title, author, isbn, category, description, level, subject } = req.body;
+export async function mesLivres(req, res) {
+  repondre(res, await service.mesLivres(req.utilisateur));
+}
 
-    if (!req.file) {
-      const err = new Error('Aucun fichier PDF fourni');
-      err.status = 400;
-      err.code = 'FILE_REQUIRED';
-      throw err;
-    }
+export async function creerLivre(req, res) {
+  repondre(res, await service.creerLivre(req.valid.body, req.file, req.utilisateur), 201);
+}
 
-    // Construction des informations de fichier.
-    const file_name = req.file.filename;
-    const file_path = req.file.path.replace(/\\/g, '/'); // normaliser pour Windows
-    const file_size = req.file.size;
-    const mime_type = req.file.mimetype;
+export async function modifierLivre(req, res) {
+  repondre(res, await service.modifierLivre(req.valid.params.id, req.valid.body, req.file, req.utilisateur));
+}
 
-    const newBook = await booksService.createBook({
-      title,
-      author,
-      isbn,
-      category,
-      description,
-      level,
-      subject,
-      file_name,
-      file_path,
-      file_size,
-      mime_type,
-      trainer_id: null // on pourra ajouter l'authentification plus tard
-    });
+export async function desactiverLivre(req, res) {
+  repondre(res, await service.desactiverLivre(req.valid.params.id, req.utilisateur));
+}
 
-    res.status(201).json({
-      success: true,
-      data: newBook
-    });
-  } catch (error) {
-    next(error);
-  }
+export async function restaurerLivre(req, res) {
+  repondre(res, await service.restaurerLivre(req.valid.params.id, req.utilisateur));
+}
+
+export async function supprimerDefinitivement(req, res) {
+  repondre(res, await service.supprimerDefinitivement(req.valid.params.id, req.utilisateur));
 }

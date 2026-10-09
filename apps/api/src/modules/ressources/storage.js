@@ -19,12 +19,31 @@ export function resoudreChemin(cheminRelatif) {
   return absolu;
 }
 
-// BR06 — true si le fichier existe et est lisible.
+const SIGNATURE_PDF = Buffer.from('%PDF-');
+
+// BR06 — true si le fichier du stockage existe, est lisible et est un PDF.
 export async function fichierLisible(cheminRelatif) {
+  if (!cheminRelatif) return false;
   try {
-    await fs.access(resoudreChemin(cheminRelatif), fs.constants.R_OK);
-    return true;
+    return await estUnPdfLisible(resoudreChemin(cheminRelatif));
   } catch {
     return false;
+  }
+}
+
+// true si le fichier (chemin absolu) est un fichier régulier qui commence par
+// la signature PDF. Sert aussi à l'intégration au catalogue (fichier source).
+export async function estUnPdfLisible(cheminAbsolu) {
+  let fichier;
+  try {
+    fichier = await fs.open(cheminAbsolu, 'r');
+    if (!(await fichier.stat()).isFile()) return false;
+    const entete = Buffer.alloc(SIGNATURE_PDF.length);
+    const { bytesRead } = await fichier.read(entete, 0, entete.length, 0);
+    return bytesRead === entete.length && entete.equals(SIGNATURE_PDF);
+  } catch {
+    return false;
+  } finally {
+    await fichier?.close();
   }
 }

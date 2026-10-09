@@ -27,4 +27,10 @@ router.get('/matieres', controller.listerMatieres);
 router.get('/annees', controller.listerAnnees);
 router.get('/types-documents', controller.listerTypesDocuments);
 
+// Référentiels des comptes et des livres (avec identifiants).
+//   GET /api/school-levels   niveaux + séries/filières
+//   GET /api/subjects        matières
+router.get('/school-levels', controller.listerNiveauxScolaires);
+router.get('/subjects', controller.listerMatieresAvecId);
+
 export default router;

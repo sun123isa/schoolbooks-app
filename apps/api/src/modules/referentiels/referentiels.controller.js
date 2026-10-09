@@ -25,3 +25,11 @@ export async function listerAnnees(req, res) {
 export async function listerTypesDocuments(req, res) {
   res.json({ success: true, data: await service.listerTypesDocuments() });
 }
+
+export async function listerNiveauxScolaires(req, res) {
+  res.json({ success: true, data: await service.listerNiveauxScolaires() });
+}
+
+export async function listerMatieresAvecId(req, res) {
+  res.json({ success: true, data: await service.listerMatieresAvecId() });
+}

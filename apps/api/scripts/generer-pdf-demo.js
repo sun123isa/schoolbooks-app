@@ -3,7 +3,7 @@
 // Responsable : Isaac LELO MAKAYA (jeu de données de démonstration) — relecture : Salem KONGOLO
 // Usage : npm run storage:demo --workspace=apps/api
 // Crée, dans STORAGE_DIR, un PDF lisible pour chaque chemin « ressources/....pdf »
-// cité dans database/seeds/002_seed_referentiels_ressources.sql. Les chemins
+// cité dans les seeds 002 et 003 (les vrais sujets du seed 003 sont copiés). Les chemins
 // contenant « manquant » sont volontairement ignorés : ils servent à tester BR06.
 // Aucun fichier réel n'est versionné : les PDF du catalogue restent hors Git.
 // =============================================================================
@@ -14,7 +14,19 @@ import { fileURLToPath } from 'url';
 import { env } from '../src/config/env.js';
 
 const racineDepot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-const fichierSeed = path.join(racineDepot, 'database/seeds/002_seed_referentiels_ressources.sql');
+const fichiersSeed = [
+  'database/seeds/002_seed_referentiels_ressources.sql',
+  'database/seeds/003_seed_sujets_bac_congo.sql'
+].map((fichier) => path.join(racineDepot, fichier));
+
+// Vrais sujets du seed 003 : copiés depuis les PDF du mode mock du frontend
+// au lieu d'être générés.
+const PDF_REELS = {
+  'ressources/bac-a-2016-mathematiques-sujet.pdf': 'apps/web/public/mocks/2016_suj_bac_A.pdf',
+  'ressources/bac-c-2017-physique-chimie-sujet.pdf': 'apps/web/public/mocks/2017_sujC_ph.pdf',
+  'ressources/bac-a-2020-mathematiques-corrige.pdf': 'apps/web/public/mocks/2020_cor_bac_A.pdf',
+  'ressources/bac-c-2020-mathematiques-sujet.pdf': 'apps/web/public/mocks/2020_suj_bac_C.pdf'
+};
 
 // Le texte d'un PDF minimal est limité à l'ASCII : on retire les accents.
 const ascii = (texte) =>
@@ -46,14 +58,20 @@ export function creerPdf(lignes) {
 }
 
 async function main() {
-  const seed = await fs.readFile(fichierSeed, 'utf8');
-  const chemins = [...new Set(seed.match(/'ressources\/[a-z0-9-]+\.pdf'/g) ?? [])]
+  const seeds = await Promise.all(fichiersSeed.map((fichier) => fs.readFile(fichier, 'utf8')));
+  const chemins = [...new Set(seeds.join('\n').match(/'ressources\/[a-z0-9-]+\.pdf'/g) ?? [])]
     .map((c) => c.slice(1, -1))
     .filter((c) => !c.includes('manquant'));
 
   for (const chemin of chemins) {
     const destination = path.join(env.storageDir, chemin);
     await fs.mkdir(path.dirname(destination), { recursive: true });
+    if (PDF_REELS[chemin]) {
+      // Vrai document : copie à l'identique (l'empreinte du seed 003 doit correspondre).
+      await fs.copyFile(path.join(racineDepot, PDF_REELS[chemin]), destination);
+      console.log(`PDF copié : ${destination}`);
+      continue;
+    }
     const titre = path.basename(chemin, '.pdf').replace(/-/g, ' ');
     await fs.writeFile(
       destination,

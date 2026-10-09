@@ -10,7 +10,9 @@
     "start": "node src/server.js",
     "test": "vitest run",
     "lint": "eslint .",
-    "storage:demo": "node scripts/generer-pdf-demo.js"
+    "storage:demo": "node scripts/generer-pdf-demo.js",
+    "db:migrate": "node scripts/migrer.js",
+    "catalogue:importer": "node scripts/importer-catalogue.js"
   },
   "keywords": [],
   "author": "",
