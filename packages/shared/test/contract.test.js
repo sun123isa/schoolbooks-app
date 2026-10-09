@@ -90,3 +90,18 @@ describe('recherche', () => {
     expect(query.page).toBe(1);
   });
 });
+
+describe('mocks des livres et des formulaires', () => {
+  it('le catalogue fictif respecte ListeLivresSchema', async () => {
+    const { ListeLivresSchema } = await import('../src/index.js');
+    const { listerLivresMock } = await import('../src/mocks/index.js');
+    expect(() => ListeLivresSchema.parse(listerLivresMock({ page: 2, limit: 6 }))).not.toThrow();
+  });
+
+  it('chaque niveau scolaire porte ses filières (BR02)', async () => {
+    const { NIVEAUX_SCOLAIRES, listerFilieresMock } = await import('../src/mocks/index.js');
+    for (const niveau of NIVEAUX_SCOLAIRES) {
+      expect(niveau.filieres.map((f) => f.code)).toEqual(listerFilieresMock(niveau.code).map((f) => f.code));
+    }
+  });
+});
