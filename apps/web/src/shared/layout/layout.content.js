@@ -18,7 +18,7 @@ export const NAVIGATION = [
   { libelle: 'Accueil', to: ROUTES.accueil, end: true, page: true },
   { libelle: 'Ressources', to: ROUTES.recherche, page: true },
   { libelle: "Sujets d'examens", to: cheminRecherche({ type: 'sujet-examen' }) },
-  { libelle: 'Livres', to: cheminRecherche({ type: 'livre' }) },
+  { libelle: 'Livres', to: ROUTES.livres, page: true },
   { libelle: 'Supports de cours', to: cheminRecherche({ type: 'cours' }) }
 ];
 
@@ -26,7 +26,11 @@ export const ENTETE = {
   rechercher: 'Rechercher une ressource',
   explorer: 'Explorer les ressources',
   ouvrirMenu: 'Ouvrir le menu',
-  fermerMenu: 'Fermer le menu'
+  fermerMenu: 'Fermer le menu',
+  connexion: 'Connexion',
+  espaceFormateur: 'Espace formateur',
+  tableauDeBord: 'Tableau de bord',
+  deconnexion: 'Se déconnecter'
 };
 
 export const PIED_DE_PAGE = {

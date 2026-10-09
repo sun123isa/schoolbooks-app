@@ -64,6 +64,44 @@
   --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath fill='%2356635b' d='M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z'/%3E%3C/svg%3E"); /* flèche des listes déroulantes natives */
   --overlay-cta: linear-gradient(180deg, rgba(8, 36, 22, 0.55) 0%, rgba(8, 36, 22, 0.72) 100%);
 
+  /* --- Espace formateur (tableau de bord) ----------------------------------------- */
+  --tdb-fond: #ffffff; /* fond de la fenêtre */
+  --tdb-panneau: #f6f7f6; /* barre latérale, barre du haut, zone de contenu */
+  --tdb-carte: #ffffff;
+  --tdb-vert: #1e7a4a; /* barres pleines, segment « actifs » */
+  --tdb-vert-fonce: #124d2f; /* barre maximale, boutons pleins, segment foncé */
+  --tdb-vert-clair: #63c08c; /* barre mise en avant */
+  --tdb-hachure: #9fb5a7; /* barres hachurées (sans activité) */
+  --tdb-degrade: linear-gradient(135deg, #217a4b 0%, #155c37 55%, #0f4a2c 100%);
+  --tdb-degrade-bouton: linear-gradient(180deg, #1f7a4a 0%, #135233 100%);
+  --tdb-sombre: #0c3a24; /* cartes sombres ondulées */
+  --tdb-onde: rgba(127, 214, 154, 0.16); /* lignes ondulées des cartes sombres */
+  --tdb-lueur: rgba(47, 138, 85, 0.55); /* halo des cartes sombres */
+  --tdb-voile: rgba(10, 42, 27, 0.4); /* fond derrière le menu mobile */
+  --tdb-rouge: #e5484d; /* bouton « arrêt » du chronomètre */
+  --tdb-avatar: #f7c8b5; /* pastille de l'utilisateur */
+  --tdb-jaune-soft: #fff6e0;
+  --tdb-jaune: #b7791f;
+  --tdb-jaune-bord: #f6dfa4;
+  /* Couleurs des icônes de matière (liste « Mes livres », avatars). */
+  --tdb-c1: #2b59e0;
+  --tdb-c1-soft: #e3eafd;
+  --tdb-c2: #1f8f84;
+  --tdb-c2-soft: #dcf3f0;
+  --tdb-c3: #f2a516;
+  --tdb-c3-soft: #fdf0d2;
+  --tdb-c4: #7b4bd6;
+  --tdb-c4-soft: #ece4fb;
+  --tdb-c5: #e2554f;
+  --tdb-c5-soft: #fde4e2;
+
+  /* --- Pages de connexion / inscription ----------------------------------------------- */
+  --auth-jaune: #fdc12a;
+  --auth-corail: #ff7a45;
+  --auth-cyan: #2ec5d3;
+  --auth-bleu-nuit: #0f2a1d; /* titres du formulaire */
+  --ombre-mosaique: 0 24px 40px rgba(0, 0, 0, 0.18);
+
   /* --- Typographie ------------------------------------------------------------ */
   --font-heading: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
   --font-body: 'Inter Variable', 'Inter', 'Inter Fallback', 'Segoe UI', system-ui, sans-serif;

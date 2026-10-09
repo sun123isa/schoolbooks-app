@@ -9,11 +9,11 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useProgressionDefilement } from '../../shared/hooks/useMouvement.js';
-import { A_PROPOS, APPEL_A_L_ACTION, HERO, NOUVEAUTES, RESSOURCES } from './landing.content.js';
+import { A_PROPOS, APPEL_A_L_ACTION, FORMATEURS, HERO, RESSOURCES } from './landing.content.js';
 import { HeroSection } from './components/HeroSection.jsx';
 import { RessourcesSection } from './components/RessourcesSection.jsx';
 import { AProposSection } from './components/AProposSection.jsx';
-import { NouveautesSection } from './components/NouveautesSection.jsx';
+import { FormateursSection } from './components/FormateursSection.jsx';
 import { CtaBanner } from './components/CtaBanner.jsx';
 
 // Liens « /#a-propos » (en-tête, pied de page) : React Router ne fait pas
@@ -45,7 +45,7 @@ export function LandingPage() {
       <HeroSection contenu={HERO} />
       <RessourcesSection contenu={RESSOURCES} />
       <AProposSection contenu={A_PROPOS} />
-      <NouveautesSection contenu={NOUVEAUTES} />
+      <FormateursSection contenu={FORMATEURS} />
       <CtaBanner contenu={APPEL_A_L_ACTION} />
     </>
   );

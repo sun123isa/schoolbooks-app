@@ -6,9 +6,20 @@
 // Une ombre apparaît dès que la page défile (useDefilement).
 // =============================================================================
 import { useEffect, useId, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { ArrowRightIcon, ListIcon, MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react';
-import { cheminRecherche } from '../../app/routes.js';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import {
+  ChalkboardTeacherIcon,
+  ListIcon,
+  MagnifyingGlassIcon,
+  SignInIcon,
+  SignOutIcon,
+  SquaresFourIcon,
+  UserCircleIcon,
+  XIcon
+} from '@phosphor-icons/react';
+import { ROLES } from '@schoolbooks/shared';
+import { ROUTES, cheminRecherche } from '../../app/routes.js';
+import { useAuth } from '../auth/AuthContext.jsx';
 import { useDefilement } from '../hooks/useMouvement.js';
 import { Button } from '../components/ui/Button.jsx';
 import { InactiveLink } from '../components/ui/InactiveLink.jsx';
@@ -28,6 +39,51 @@ function LienNavigation({ item, onNavigate }) {
     <Link to={item.to} className="header__nav-link" onClick={onNavigate}>
       {item.libelle}
     </Link>
+  );
+}
+
+// Visiteur : « Connexion » (apprenants déjà inscrits) et « Espace formateur ».
+// Les apprenants ne s'inscrivent qu'au moment d'ouvrir un document (AccesReserve).
+// Connecté : tableau de bord (formateur), prénom et déconnexion.
+function ActionsCompte({ onNavigate }) {
+  const { utilisateur, pret, deconnecter } = useAuth();
+  const navigate = useNavigate();
+
+  if (!pret) return null;
+  if (!utilisateur) {
+    return (
+      <>
+        <Button to={ROUTES.connexion} size="sm" variant="outline" iconLeft={SignInIcon} onClick={onNavigate}>
+          {ENTETE.connexion}
+        </Button>
+        <Button to={ROUTES.tableauDeBord} size="sm" iconLeft={ChalkboardTeacherIcon} onClick={onNavigate}>
+          {ENTETE.espaceFormateur}
+        </Button>
+      </>
+    );
+  }
+
+  async function seDeconnecter() {
+    onNavigate();
+    await deconnecter();
+    navigate(ROUTES.accueil);
+  }
+
+  return (
+    <>
+      {utilisateur.role === ROLES.formateur && (
+        <Button to={ROUTES.tableauDeBord} size="sm" iconLeft={SquaresFourIcon} onClick={onNavigate}>
+          {ENTETE.tableauDeBord}
+        </Button>
+      )}
+      <span className="header__compte" title={utilisateur.email}>
+        <UserCircleIcon weight="duotone" aria-hidden="true" />
+        {utilisateur.prenom}
+      </span>
+      <button type="button" className="header__icon-btn" aria-label={ENTETE.deconnexion} title={ENTETE.deconnexion} onClick={seDeconnecter}>
+        <SignOutIcon weight="bold" aria-hidden="true" />
+      </button>
+    </>
   );
 }
 
@@ -75,9 +131,7 @@ export function Header() {
             <Link to={cheminRecherche()} className="header__icon-btn" aria-label={ENTETE.rechercher} onClick={fermer}>
               <MagnifyingGlassIcon weight="bold" aria-hidden="true" />
             </Link>
-            <Button to={cheminRecherche()} size="sm" iconRight={ArrowRightIcon} onClick={fermer}>
-              {ENTETE.explorer}
-            </Button>
+            <ActionsCompte onNavigate={fermer} />
           </div>
         </div>
       </div>

@@ -1,0 +1,186 @@
+/* =============================================================================
+   Socle frontend — formulaires (champs, alertes, carte de formulaire)
+   Utilise uniquement les tokens de shared/styles/tokens.css.
+   ============================================================================= */
+
+.formulaire {
+  display: grid;
+  gap: 18px;
+}
+
+.formulaire__ligne {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.formulaire__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.form-champ {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.form-champ__label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.form-champ__requis {
+  color: var(--color-danger-strong);
+}
+
+.form-champ__controle {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+textarea.form-champ__controle {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+select.form-champ__controle {
+  appearance: none;
+  padding-right: 40px;
+  background-image: var(--chevron-select);
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+}
+
+input[type='file'].form-champ__controle {
+  padding: 9px 12px;
+  cursor: pointer;
+}
+
+.form-champ__controle:hover:not(:disabled) {
+  border-color: var(--color-primary-light);
+}
+
+.form-champ__controle:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-tint);
+}
+
+.form-champ__controle:disabled {
+  background: var(--color-bg-alt);
+  color: var(--color-text-subtle);
+  cursor: not-allowed;
+}
+
+.form-champ--erreur .form-champ__controle {
+  border-color: var(--color-danger-strong);
+}
+
+.form-champ__aide {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.form-champ__erreur {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-danger-strong);
+}
+
+.form-case {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.form-case input {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  accent-color: var(--color-primary);
+}
+
+.form-alerte {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  border: 1px solid;
+}
+
+.form-alerte--erreur {
+  background: var(--color-danger-soft);
+  border-color: var(--color-danger-border);
+  color: var(--color-danger-strong);
+}
+
+.form-alerte--succes {
+  background: var(--color-success-soft);
+  border-color: var(--color-success-border);
+  color: var(--color-success-strong);
+}
+
+.form-alerte__icone {
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+/* Carte qui accueille un formulaire (connexion, inscription, livre). */
+.carte-formulaire {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: clamp(22px, 4vw, 36px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.carte-formulaire--large {
+  max-width: 820px;
+}
+
+.carte-formulaire__titre {
+  margin: 0 0 6px;
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  color: var(--color-text);
+}
+
+.carte-formulaire__intro {
+  margin: 0 0 22px;
+  color: var(--color-text-muted);
+}
+
+.carte-formulaire__pied {
+  margin: 22px 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.carte-formulaire__pied a {
+  color: var(--color-primary);
+  font-weight: 600;
+}

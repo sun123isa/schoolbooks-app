@@ -20,22 +20,12 @@ import {
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon
 } from '@phosphor-icons/react';
+import { chargerPdfjs } from '../../../shared/pdf/pdfjs.js';
 import { TEXTES, ZOOM_MAX, ZOOM_MIN, zoomSuivant } from '../ressource.content.js';
 
 const T = TEXTES.visionneuse;
 const MARGE_PAGE = 32; // px de marge autour de la page en mode « ajusté »
 const SEUIL_GLISSEMENT = 60; // px
-
-let promessePdfjs;
-function chargerPdfjs() {
-  promessePdfjs ??= Promise.all([import('pdfjs-dist'), import('pdfjs-dist/build/pdf.worker.min.mjs?url')]).then(
-    ([pdfjs, worker]) => {
-      pdfjs.GlobalWorkerOptions.workerSrc = worker.default;
-      return pdfjs;
-    }
-  );
-  return promessePdfjs;
-}
 
 function BoutonOutil({ label, onClick, disabled, children }) {
   return (

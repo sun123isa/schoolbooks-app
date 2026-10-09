@@ -3,7 +3,7 @@
 // Responsable : HIRWA Jean Baptiste — relecture : Salem KONGOLO
 //
 // Ordre des sections :
-//   en-tête · hero · nos ressources · à propos · ajoutées récemment ·
+//   en-tête · hero · nos ressources · à propos · pour les formateurs ·
 //   appel à l'action · pied de page.
 //
 // Photos : Unsplash (licence Unsplash, usage commercial libre) — auteurs et
@@ -12,7 +12,7 @@
 // Codes de référentiel (niveau, type, tri) : identiques au contrat partagé
 // (@schoolbooks/shared) — vérifiés par landing.content.test.js.
 // =============================================================================
-import { cheminRecherche } from '../../app/routes.js';
+import { cheminConnexion, cheminInscription, cheminRecherche } from '../../app/routes.js';
 import { ANCRE_A_PROPOS } from '../../shared/layout/layout.content.js';
 import imageHeroFond from './assets/hero-fond-bibliotheque.webp';
 import imageHeroPortrait from './assets/hero-etudiante.webp';
@@ -20,10 +20,6 @@ import imageRessources from './assets/ressources-etudiant-ordinateur.webp';
 import imageAProposGroupe from './assets/a-propos-groupe.webp';
 import imageAProposRevision from './assets/a-propos-revision.webp';
 import imageBibliotheque from './assets/nouveaute-bibliotheque.webp';
-import imageLycee from './assets/nouveaute-lycee.webp';
-import imageDiplomes from './assets/nouveaute-diplomes.webp';
-import imageExamen from './assets/nouveaute-examen.webp';
-import imageExercices from './assets/nouveaute-exercices.webp';
 import imageCta from './assets/cta-etudiants-pelouse.webp';
 
 export const HERO = {
@@ -77,7 +73,12 @@ export const RESSOURCES = {
     { type: 'livre', titre: 'Livres & manuels', texte: 'Ouvrages de référence par matière' },
     { type: 'cours', titre: 'Supports de cours', texte: 'Cours structurés par chapitre' },
     // Masquée sur smartphone : la grille reste en 2 × 2.
-    { type: 'exercices', titre: "Fiches d'exercices", texte: 'Entraînement et applications', masqueMobile: true }
+    {
+      type: 'exercices',
+      titre: "Fiches d'exercices",
+      texte: 'Entraînement et applications',
+      masqueMobile: true
+    }
   ].map((carte) => ({ ...carte, to: cheminRecherche({ type: carte.type }) }))
 };
 
@@ -125,54 +126,48 @@ export const A_PROPOS = {
   }
 };
 
-export const NOUVEAUTES = {
-  surtitre: 'Ajoutées récemment',
-  titre: 'Nouveautés du catalogue',
-  texte: 'Les derniers documents intégrés à la bibliothèque, vérifiés et classés.',
-  // Filtre par niveau (codes du référentiel des niveaux).
-  filtres: [
-    { code: '', libelle: 'Tout' },
-    { code: 'lycee', libelle: 'Lycée' },
-    { code: 'universite', libelle: 'Université' }
+// Section « Pour les formateurs » : présente l'espace de publication (et non le
+// catalogue). Aucun chiffre : le visuel est une illustration du tableau de bord.
+export const FORMATEURS = {
+  surtitre: 'Pour les formateurs',
+  titre: ['Partagez vos cours,', 'suivez leur impact'],
+  texte:
+    'Enseignants et formateurs publient leurs livres et supports PDF en quelques minutes. Chaque document est classé pour atteindre directement les élèves de la bonne série.',
+  etapes: [
+    {
+      icone: 'compte',
+      titre: 'Créez votre espace',
+      texte: 'Un compte formateur gratuit, prêt en une minute.'
+    },
+    {
+      icone: 'publier',
+      titre: 'Déposez votre PDF',
+      texte: 'Titre, niveau, matière : le livre est en ligne.'
+    },
+    {
+      icone: 'suivre',
+      titre: 'Suivez vos lecteurs',
+      texte: 'Téléchargements, livres actifs, matières couvertes.'
+    }
   ],
-  filtresLabel: 'Filtrer les nouveautés par niveau',
-  lienTout: 'Voir tout le catalogue',
-  lienCarte: 'Consulter',
-  nouveau: 'Nouveau',
-  telechargeable: 'Téléchargeable',
-  enLigne: 'En ligne',
-  toutesSeries: 'Toutes séries',
-  nombre: 4,
-  // Les ressources n'ont pas d'image dans l'API : photos par type de document,
-  // par ordre de préférence (voir attribuerImages).
-  images: {
-    'sujet-examen': [imageExamen, imageLycee, imageExercices],
-    corrige: [imageDiplomes, imageExamen],
-    livre: [imageBibliotheque, imageLycee],
-    cours: [imageLycee, imageBibliotheque],
-    exercices: [imageExercices, imageExamen]
+  boutons: {
+    principal: { libelle: 'Créer mon espace formateur', to: cheminInscription('formateur') },
+    secondaire: { libelle: 'J’ai déjà un compte', to: cheminConnexion('formateur') }
   },
-  vide: 'Aucune nouveauté pour ce niveau pour le moment.'
+  image: {
+    src: imageBibliotheque,
+    largeur: 1200,
+    hauteur: 800,
+    alt: 'Étudiant lisant entre les rayonnages d’une bibliothèque, une bibliothécaire range des livres'
+  },
+  // Étiquettes du visuel (illustration de l'espace formateur).
+  visuel: {
+    publie: { titre: 'Livre publié', texte: 'Visible dans le catalogue' },
+    statistiques: 'Publications de la semaine',
+    jauge: 'Livres actifs',
+    jours: ['L', 'M', 'M', 'J', 'V', 'S', 'D']
+  }
 };
-
-// Une photo par ressource affichée, sans doublon tant que possible : la première
-// photo libre parmi celles du type, sinon une photo libre quelconque, sinon la
-// photo préférée du type. Renvoie un tableau aligné sur `ressources`.
-export function attribuerImages(ressources, imagesParType = NOUVEAUTES.images) {
-  const toutes = [...new Set(Object.values(imagesParType).flat())];
-  const utilisees = new Set();
-  return ressources.map((ressource) => {
-    const preferees = imagesParType[ressource.type.code] ?? toutes;
-    const image = preferees.find((i) => !utilisees.has(i)) ?? toutes.find((i) => !utilisees.has(i)) ?? preferees[0];
-    utilisees.add(image);
-    return image;
-  });
-}
-
-// « Voir tout le catalogue » : recherche triée par date, filtrée par le niveau choisi.
-export function cheminNouveautes(niveau) {
-  return cheminRecherche({ tri: 'recent', niveau: niveau || undefined });
-}
 
 export const APPEL_A_L_ACTION = {
   titre: 'Cherchez. Consultez. Réussissez.',
