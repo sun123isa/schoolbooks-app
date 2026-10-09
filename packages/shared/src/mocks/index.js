@@ -5,3 +5,4 @@
 // =============================================================================
 export * from './referentiels.mock.js';
 export * from './ressources.mock.js';
+export * from './livres.mock.js';

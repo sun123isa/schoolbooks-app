@@ -1,0 +1,389 @@
+/* =============================================================================
+   Pages de comptes — connexion et inscription
+   Deux moitiés : visuel coloré (mosaïque de photos, formes, arguments) et
+   formulaire sur fond blanc.
+   ============================================================================= */
+
+.auth {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 100vh;
+  font-family: var(--font-heading);
+  background: var(--color-bg);
+}
+
+/* --- Visuel ------------------------------------------------------------------------ */
+
+.auth__visuel {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 48px;
+  height: 100vh;
+  padding: 48px clamp(32px, 6vw, 88px);
+  overflow: hidden;
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+}
+
+/* Formes décoratives : quarts et demi-cercles colorés. */
+.auth__forme {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+}
+
+.auth__forme--1 {
+  top: 6%;
+  left: 9%;
+  background: var(--auth-jaune);
+  border-radius: 44px 0 0 0;
+}
+
+.auth__forme--2 {
+  top: 4%;
+  left: 40%;
+  background: var(--color-primary-light);
+  border-radius: 0 0 0 44px;
+}
+
+.auth__forme--3 {
+  top: 12%;
+  right: 12%;
+  background: var(--auth-cyan);
+  border-radius: 44px 0 0 0;
+}
+
+.auth__forme--4 {
+  top: 40%;
+  left: 4%;
+  background: var(--auth-corail);
+  border-radius: 0 44px 0 0;
+}
+
+.auth__forme--5 {
+  top: 47%;
+  right: 6%;
+  background: var(--auth-corail);
+  border-radius: 0 0 44px 0;
+}
+
+.auth__forme--6 {
+  bottom: 7%;
+  left: 7%;
+  background: var(--auth-jaune);
+  border-radius: 0 0 44px 0;
+}
+
+.auth__forme--7 {
+  bottom: 12%;
+  right: 10%;
+  background: var(--auth-cyan);
+  border-radius: 0 0 0 44px;
+}
+
+/* Mosaïque 3 × 3 dessinant un « S » (creux au centre, coins arrondis). */
+.auth__mosaique {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: min(100%, 330px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  filter: drop-shadow(var(--ombre-mosaique));
+}
+
+.auth__case {
+  overflow: hidden;
+}
+
+.auth__case img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Haut : arrondi à gauche, extrémité pincée à droite ; milieu : courbe descendante à
+   gauche, courbe montante à droite ; bas : extrémité pincée à gauche, arrondi à droite. */
+.auth__case--0 { border-radius: 100% 0 0 0; }
+.auth__case--2 { border-radius: 0 100% 100% 0; }
+.auth__case--3 { border-radius: 0 0 0 100%; }
+.auth__case--5 { border-radius: 0 100% 0 0; }
+.auth__case--6 { border-radius: 100% 0 0 100%; }
+.auth__case--8 { border-radius: 0 0 100% 0; }
+
+.auth__accroche {
+  position: relative;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.auth__bienvenue,
+.auth__question {
+  margin: 0;
+  font-size: clamp(1.5rem, 1rem + 1.2vw, 2rem);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.auth__question {
+  font-weight: 400;
+}
+
+.auth__question strong {
+  font-weight: 700;
+}
+
+.auth__points {
+  display: grid;
+  gap: 8px;
+  margin: 24px 0 0;
+  padding: 0;
+  font-size: 0.95rem;
+  color: var(--color-on-primary-muted);
+  list-style: none;
+}
+
+.auth__points li::before {
+  content: '- ';
+}
+
+.auth__points strong {
+  color: var(--color-on-primary);
+}
+
+/* --- Formulaire ------------------------------------------------------------------------ */
+
+.auth__panneau {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 28px clamp(20px, 6vw, 88px) 40px;
+}
+
+.auth__barre {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.auth__marque {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--auth-bleu-nuit);
+  text-decoration: none;
+}
+
+.auth__logo {
+  width: 26px;
+  height: 29px;
+}
+
+.auth__retour {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.auth__retour:hover {
+  color: var(--color-primary);
+}
+
+.auth__contenu {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  padding: 40px 0 8px;
+}
+
+.auth__titre {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--auth-bleu-nuit);
+}
+
+.auth__sous-titre {
+  margin: 6px 0 12px;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.auth__trait {
+  display: block;
+  width: 36px;
+  height: 4px;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+.auth__separateur {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 36px 0 24px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+.auth__separateur::before,
+.auth__separateur::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.auth__formulaire {
+  gap: 20px;
+}
+
+.auth__formulaire .formulaire__ligne {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.auth .form-champ__label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--auth-bleu-nuit);
+}
+
+.auth .form-champ__controle {
+  min-height: 52px;
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  border-color: var(--color-border);
+  border-radius: 6px;
+  box-shadow: var(--shadow-xs);
+}
+
+.auth .form-champ__controle::placeholder {
+  color: var(--color-text-subtle);
+}
+
+.auth__case {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 6px;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.auth__case input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-primary);
+}
+
+.auth__case strong {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.auth__bouton {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 12px;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.auth__bouton:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  box-shadow: var(--shadow-primary);
+}
+
+.auth__bouton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.auth__bouton:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.auth__pied {
+  margin: 28px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.9;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.auth__pied a {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* --- Adaptations ------------------------------------------------------------------------ */
+
+@media (max-width: 960px) {
+  .auth {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .auth__visuel {
+    position: relative;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+    padding: 28px 24px;
+  }
+
+  .auth__mosaique {
+    flex-shrink: 0;
+    width: 120px;
+    margin: 0;
+  }
+
+  .auth__accroche {
+    margin: 0;
+  }
+
+  .auth__points,
+  .auth__forme--3,
+  .auth__forme--4,
+  .auth__forme--5 {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .auth__mosaique {
+    display: none;
+  }
+
+  .auth__bienvenue,
+  .auth__question {
+    font-size: 1.25rem;
+  }
+}

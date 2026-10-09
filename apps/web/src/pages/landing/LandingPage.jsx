@@ -2,68 +2,51 @@
 // Landing page — route « / »
 // Responsable : HIRWA Jean Baptiste — relecture : Salem KONGOLO
 // Ticket Jira : « Parcours utilisateur : accéder aux ressources adaptées »
-// ÉTAT : SQUELETTE — parcours niveau → série/filière → recherche fonctionnel, sans design.
-// TODO (Jean Baptiste) :
-//   - sections de présentation : problème, solution, types de ressources,
-//     fonctionnement en quelques étapes (composants dans ./components/) ;
-//   - remplacer les listes par un sélecteur de niveau puis de série/filière ;
-//   - message invitant à choisir un niveau si l'utilisateur continue sans niveau ;
-//   - responsive (ordinateur, tablette, smartphone).
+// Assemble les sections ; chaque section est un composant de ./components/ et
+// tout le contenu (textes, chiffres, liens) vient de ./landing.content.js.
+// Route déclarée en pleine largeur (handle.pleineLargeur dans app/router.jsx).
 // =============================================================================
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { cheminRecherche } from '../../app/routes.js';
-import { useApi } from '../../shared/hooks/useApi.js';
-import { ErrorMessage, Loader } from '../../shared/components/StatusMessages.jsx';
-import { fetchFilieres, fetchNiveaux } from './landing.api.js';
+import { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useProgressionDefilement } from '../../shared/hooks/useMouvement.js';
+import { A_PROPOS, APPEL_A_L_ACTION, FORMATEURS, HERO, RESSOURCES } from './landing.content.js';
+import { HeroSection } from './components/HeroSection.jsx';
+import { RessourcesSection } from './components/RessourcesSection.jsx';
+import { AProposSection } from './components/AProposSection.jsx';
+import { FormateursSection } from './components/FormateursSection.jsx';
+import { CtaBanner } from './components/CtaBanner.jsx';
 
-function ChoixFiliere({ niveau }) {
-  const filieres = useApi((signal) => fetchFilieres(niveau.code, signal), [niveau.code]);
+// Liens « /#a-propos » (en-tête, pied de page) : React Router ne fait pas
+// défiler vers l'ancre, on le fait ici et on y place le focus clavier.
+function useDefilementVersAncre() {
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (!hash) return;
+    const cible = document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (!cible) return;
+    cible.scrollIntoView();
+    cible.focus({ preventScroll: true });
+  }, [hash]);
+}
 
-  if (filieres.isLoading) return <Loader label="Chargement des séries/filières…" />;
-  if (filieres.error) return <ErrorMessage error={filieres.error} onRetry={filieres.reload} />;
-
-  return (
-    <ul>
-      <li>
-        <Link to={cheminRecherche({ niveau: niveau.code })}>Tout le niveau {niveau.libelle}</Link>
-      </li>
-      {filieres.data.map((filiere) => (
-        <li key={filiere.code}>
-          <Link to={cheminRecherche({ niveau: niveau.code, filiere: filiere.code })}>{filiere.libelle}</Link>
-        </li>
-      ))}
-    </ul>
-  );
+// Fine barre de progression de lecture, sous l'en-tête (décorative).
+function BarreProgression() {
+  const ref = useRef(null);
+  useProgressionDefilement(ref);
+  return <div ref={ref} className="barre-progression" aria-hidden="true" />;
 }
 
 export function LandingPage() {
-  const niveaux = useApi((signal) => fetchNiveaux(signal), []);
-  const [niveauChoisi, setNiveauChoisi] = useState(null);
+  useDefilementVersAncre();
 
   return (
-    <section>
-      <h1>Trouvez vos sujets d'examens et ressources en quelques clics</h1>
-      <p>Choisissez votre niveau, puis votre série ou filière.</p>
-
-      {niveaux.isLoading && <Loader label="Chargement des niveaux…" />}
-      {niveaux.error && <ErrorMessage error={niveaux.error} onRetry={niveaux.reload} />}
-      {niveaux.data && (
-        <div role="group" aria-label="Choix du niveau">
-          {niveaux.data.map((niveau) => (
-            <button
-              key={niveau.code}
-              type="button"
-              aria-pressed={niveauChoisi?.code === niveau.code}
-              onClick={() => setNiveauChoisi(niveau)}
-            >
-              {niveau.libelle}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {niveauChoisi ? <ChoixFiliere niveau={niveauChoisi} /> : <p>Sélectionnez un niveau pour continuer.</p>}
-    </section>
+    <>
+      <BarreProgression />
+      <HeroSection contenu={HERO} />
+      <RessourcesSection contenu={RESSOURCES} />
+      <AProposSection contenu={A_PROPOS} />
+      <FormateursSection contenu={FORMATEURS} />
+      <CtaBanner contenu={APPEL_A_L_ACTION} />
+    </>
   );
 }

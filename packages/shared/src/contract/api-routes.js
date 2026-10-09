@@ -27,5 +27,31 @@ export const API_ROUTES = {
   // Ressources et fichiers — Emmanuel AYA
   ressource: (id) => `/ressources/${encodeURIComponent(id)}`,
   fichier: (id) => `/ressources/${encodeURIComponent(id)}/fichier`,
-  telechargement: (id) => `/ressources/${encodeURIComponent(id)}/telechargement`
+  telechargement: (id) => `/ressources/${encodeURIComponent(id)}/telechargement`,
+
+  // Comptes et authentification (cookies HTTP-only)
+  auth: {
+    inscriptionApprenant: '/auth/register/learner',
+    inscriptionFormateur: '/auth/register/trainer',
+    connexion: '/auth/login',
+    rafraichir: '/auth/refresh',
+    moi: '/auth/me',
+    deconnexion: '/auth/logout'
+  },
+
+  // Référentiels des livres (identifiants et codes)
+  niveauxScolaires: '/school-levels',
+  matieresLivres: '/subjects',
+
+  // Livres
+  livres: '/books',
+  livre: (id) => `/books/${encodeURIComponent(id)}`,
+  fichierLivre: (nomFichier) => `/uploads/books/${encodeURIComponent(nomFichier)}`,
+  telechargementLivre: (id) => `/books/${encodeURIComponent(id)}/download`,
+
+  // Espace formateur
+  mesLivres: '/books/trainer/mine',
+  livreFormateur: (id) => `/books/trainer/${encodeURIComponent(id)}`,
+  restaurerLivre: (id) => `/books/trainer/${encodeURIComponent(id)}/restore`,
+  supprimerLivre: (id) => `/books/trainer/${encodeURIComponent(id)}/permanent`
 };

@@ -24,7 +24,22 @@ export const ERROR_CODES = {
 
   // Intégration au catalogue (Emmanuel)
   RESSOURCE_INCOMPLETE: 'RESSOURCE_INCOMPLETE', // 422 — BR01/BR03/BR05/BR04
-  DOUBLON: 'DOUBLON' // 409 — BR09
+  DOUBLON: 'DOUBLON', // 409 — BR09
+
+  // Comptes et authentification
+  NON_AUTHENTIFIE: 'NON_AUTHENTIFIE', // 401 — access token absent, invalide ou expiré
+  SESSION_EXPIREE: 'SESSION_EXPIREE', // 401 — refresh token absent, révoqué ou expiré
+  IDENTIFIANTS_INVALIDES: 'IDENTIFIANTS_INVALIDES', // 401 — e-mail ou mot de passe incorrect
+  ACCES_INTERDIT: 'ACCES_INTERDIT', // 403 — rôle insuffisant ou livre d'un autre formateur
+  EMAIL_DEJA_UTILISE: 'EMAIL_DEJA_UTILISE', // 409 — inscription avec un e-mail existant
+  TROP_DE_REQUETES: 'TROP_DE_REQUETES', // 429 — trop de tentatives de connexion
+
+  // Livres des formateurs
+  LIVRE_INTROUVABLE: 'LIVRE_INTROUVABLE', // 404 — id inconnu (ou livre désactivé pour le public)
+  REFERENTIEL_INCONNU: 'REFERENTIEL_INCONNU', // 400 — niveau, matière, filière ou type inconnu
+  FICHIER_REQUIS: 'FICHIER_REQUIS', // 400 — création sans PDF
+  FICHIER_INVALIDE: 'FICHIER_INVALIDE', // 400 — fichier qui n'est pas un PDF
+  FICHIER_TROP_VOLUMINEUX: 'FICHIER_TROP_VOLUMINEUX' // 413 — au-delà de la taille maximale
 };
 
 export const ApiErrorSchema = z.object({

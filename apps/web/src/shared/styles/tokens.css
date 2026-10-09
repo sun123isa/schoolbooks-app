@@ -1,0 +1,146 @@
+/* =============================================================================
+   Socle frontend — tokens de design (source unique des valeurs visuelles)
+   Responsable : HIRWA Jean Baptiste (Lead Dev) — relecture : Salem KONGOLO
+   Règle : aucun composant ne code en dur une couleur, une police, un rayon ou
+   une ombre ; il utilise ces variables. Pour ajouter un token, le faire ici.
+   Direction artistique : vert profond (boutons, sections sombres), teintes de
+   vert clair pour les fonds, blanc et gris très clairs, texte presque noir.
+   Contrastes vérifiés (WCAG AA) : voir les commentaires de chaque couleur.
+   ============================================================================= */
+
+:root {
+  /* --- Couleurs de marque --------------------------------------------------- */
+  --color-primary: #17633a; /* vert profond : boutons, liens, icônes — blanc dessus 7,3:1 */
+  --color-primary-hover: #114d2d;
+  --color-primary-light: #2f8a55; /* deuxième ton du logo, survols */
+  --color-primary-dark: #0e3a25; /* fonds des sections sombres — blanc dessus 12,7:1 */
+  --color-primary-darker: #0a2a1b; /* pied de page */
+  --color-primary-soft: #eef6f1; /* fonds teintés : cartes, pastilles */
+  --color-primary-tint: #dcefe3; /* bordures et icônes sur fond teinté */
+
+  --color-accent: #7fd69a; /* vert clair : sur-titres et accents SUR FOND SOMBRE uniquement (7,3:1 sur primary-dark) */
+  --color-accent-hover: #6bc888;
+  --color-accent-soft: #e3f5e9;
+  --color-accent-border: #b9e5c7;
+  --color-accent-strong: #17633a; /* texte d'accent sur fond clair */
+  --color-accent-large: #2f8a55; /* accent en grande taille sur fond clair (4,3:1, AA large) */
+
+  --color-success: #22a35a;
+  --color-success-soft: #e3f5e9;
+  --color-success-border: #b9e5c7;
+  --color-success-strong: #17633a;
+
+  --color-danger-soft: #fdf1f0;
+  --color-danger-border: #f4c7c3;
+  --color-danger-strong: #b42318;
+
+  /* --- Neutres ---------------------------------------------------------------- */
+  --color-bg: #ffffff;
+  --color-bg-alt: #f6f8f7; /* sections alternées gris très clair */
+  --color-bg-footer: #0a2a1b;
+  --color-surface: #ffffff;
+  --color-text: #111a15; /* presque noir — 17,8:1 sur blanc */
+  --color-text-muted: #56635b; /* gris vert — 6,3:1 sur blanc, 5,9:1 sur bg-alt */
+  --color-text-subtle: #7b877f;
+  --color-border: #e4eae6;
+  --color-border-strong: #cdd7d0;
+  --color-chip: #eef2ef;
+  --color-on-primary: #ffffff;
+  --color-on-primary-muted: #cfe0d5; /* texte secondaire sur fond vert foncé — 9,3:1 */
+  --color-focus: #2f8a55;
+  --color-focus-on-dark: #7fd69a;
+  --color-hover-on-dark: rgba(255, 255, 255, 0.08); /* survol des éléments posés sur fond sombre */
+  --color-line-on-dark: rgba(255, 255, 255, 0.14); /* séparateurs sur fond sombre */
+
+  /* Voiles posés sur les photos (hero, bandeau final) : garantissent le contraste du texte blanc. */
+  --overlay-hero: linear-gradient(90deg, rgba(8, 36, 22, 0.94) 0%, rgba(8, 36, 22, 0.78) 38%, rgba(8, 36, 22, 0.2) 70%, rgba(8, 36, 22, 0) 100%);
+  --overlay-hero-mobile: linear-gradient(180deg, rgba(8, 36, 22, 0.8) 0%, rgba(8, 36, 22, 0.92) 100%);
+  --fondu-portrait: linear-gradient(90deg, transparent 0%, #000 28%); /* masque : bord gauche du portrait du hero */
+  --verre: rgba(255, 255, 255, 0.12); /* fond des étiquettes « verre dépoli » sur photo */
+  --degrade-squelette: linear-gradient(90deg, #eef2ef 0%, #f7f9f8 50%, #eef2ef 100%); /* chargement en cours */
+  --halo-doux: rgba(127, 214, 154, 0.12); /* anneau autour d'un bloc mis en avant sur fond sombre */
+  --voile-photo: rgba(8, 36, 22, 0.78); /* dégradé bas de photo sous une étiquette blanche */
+  --halo-primaire: rgba(127, 214, 154, 0.55); /* halo pulsant des boutons sur fond sombre */
+  --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath fill='%2356635b' d='M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z'/%3E%3C/svg%3E"); /* flèche des listes déroulantes natives */
+  --overlay-cta: linear-gradient(180deg, rgba(8, 36, 22, 0.55) 0%, rgba(8, 36, 22, 0.72) 100%);
+
+  /* --- Espace formateur (tableau de bord) ----------------------------------------- */
+  --tdb-fond: #ffffff; /* fond de la fenêtre */
+  --tdb-panneau: #f6f7f6; /* barre latérale, barre du haut, zone de contenu */
+  --tdb-carte: #ffffff;
+  --tdb-vert: #1e7a4a; /* barres pleines, segment « actifs » */
+  --tdb-vert-fonce: #124d2f; /* barre maximale, boutons pleins, segment foncé */
+  --tdb-vert-clair: #63c08c; /* barre mise en avant */
+  --tdb-hachure: #9fb5a7; /* barres hachurées (sans activité) */
+  --tdb-degrade: linear-gradient(135deg, #217a4b 0%, #155c37 55%, #0f4a2c 100%);
+  --tdb-degrade-bouton: linear-gradient(180deg, #1f7a4a 0%, #135233 100%);
+  --tdb-sombre: #0c3a24; /* cartes sombres ondulées */
+  --tdb-onde: rgba(127, 214, 154, 0.16); /* lignes ondulées des cartes sombres */
+  --tdb-lueur: rgba(47, 138, 85, 0.55); /* halo des cartes sombres */
+  --tdb-voile: rgba(10, 42, 27, 0.4); /* fond derrière le menu mobile */
+  --tdb-rouge: #e5484d; /* bouton « arrêt » du chronomètre */
+  --tdb-avatar: #f7c8b5; /* pastille de l'utilisateur */
+  --tdb-jaune-soft: #fff6e0;
+  --tdb-jaune: #b7791f;
+  --tdb-jaune-bord: #f6dfa4;
+  /* Couleurs des icônes de matière (liste « Mes livres », avatars). */
+  --tdb-c1: #2b59e0;
+  --tdb-c1-soft: #e3eafd;
+  --tdb-c2: #1f8f84;
+  --tdb-c2-soft: #dcf3f0;
+  --tdb-c3: #f2a516;
+  --tdb-c3-soft: #fdf0d2;
+  --tdb-c4: #7b4bd6;
+  --tdb-c4-soft: #ece4fb;
+  --tdb-c5: #e2554f;
+  --tdb-c5-soft: #fde4e2;
+
+  /* --- Pages de connexion / inscription ----------------------------------------------- */
+  --auth-jaune: #fdc12a;
+  --auth-corail: #ff7a45;
+  --auth-cyan: #2ec5d3;
+  --auth-bleu-nuit: #0f2a1d; /* titres du formulaire */
+  --ombre-mosaique: 0 24px 40px rgba(0, 0, 0, 0.18);
+
+  /* --- Typographie ------------------------------------------------------------ */
+  --font-heading: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', 'Inter Fallback', 'Segoe UI', system-ui, sans-serif;
+  /* Effet typographique d'accent (un mot du hero et l'annotation manuscrite) : à n'utiliser nulle part ailleurs. */
+  --font-script: 'Kaushan Script', 'Segoe Script', cursive;
+
+  --text-xs: 0.75rem; /* 12 px */
+  --text-sm: 0.875rem; /* 14 px */
+  --text-base: 1rem; /* 16 px */
+  --text-lg: 1.125rem; /* 18 px */
+  --text-xl: 1.25rem; /* 20 px */
+  --text-2xl: 1.625rem; /* 26 px */
+  --text-3xl: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem); /* titres de section */
+  --text-display: clamp(2.375rem, 1.2rem + 3.6vw, 4rem); /* titre du hero */
+
+  /* --- Formes ------------------------------------------------------------------- */
+  --radius-sm: 6px;
+  --radius-md: 8px; /* boutons, champs */
+  --radius-lg: 14px; /* cartes */
+  --radius-xl: 20px; /* grands blocs, photos */
+  --radius-pill: 999px; /* badges, pastilles */
+
+  --shadow-xs: 0 1px 2px rgba(10, 42, 27, 0.05);
+  --shadow-sm: 0 2px 8px rgba(10, 42, 27, 0.06), 0 1px 2px rgba(10, 42, 27, 0.04);
+  --shadow-md: 0 12px 32px -14px rgba(10, 42, 27, 0.22), 0 2px 6px rgba(10, 42, 27, 0.05);
+  --shadow-lg: 0 24px 60px -20px rgba(10, 42, 27, 0.32);
+  --shadow-text: 0 2px 12px rgba(0, 0, 0, 0.35); /* texte posé directement sur une photo */
+  --shadow-primary: 0 8px 18px -8px rgba(23, 99, 58, 0.65);
+
+  /* --- Mise en page --------------------------------------------------------------- */
+  --container-max: 1240px;
+  --container-padding: clamp(16px, 4vw, 40px);
+  --header-height: 72px;
+  --section-padding: clamp(64px, 8vw, 104px);
+
+  /* --- Animations ------------------------------------------------------------------ */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* entrées : rapide puis douce */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* léger rebond (icônes, pastilles) */
+  --reflet: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+}

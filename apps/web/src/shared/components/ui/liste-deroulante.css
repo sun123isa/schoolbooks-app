@@ -1,0 +1,169 @@
+/* =============================================================================
+   Socle frontend — liste déroulante du site (ListeDeroulante.jsx)
+   Variantes : « site » (pages de comptes, formulaires du site public) et
+   « tdb » (espace formateur : fond gris, coins plus arrondis).
+   ============================================================================= */
+
+.liste {
+  position: relative;
+  width: 100%;
+}
+
+.liste__bouton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 16px;
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.liste__bouton:hover:not(:disabled) {
+  border-color: var(--color-primary-light);
+}
+
+.liste__bouton:focus-visible,
+.liste--ouverte .liste__bouton {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-tint);
+}
+
+.liste__bouton:disabled {
+  color: var(--color-text-subtle);
+  background: var(--color-bg-alt);
+  cursor: not-allowed;
+}
+
+.liste__bouton[aria-invalid='true'] {
+  border-color: var(--color-danger-strong);
+}
+
+.liste__bouton--vide .liste__valeur {
+  color: var(--color-text-subtle);
+}
+
+.liste__valeur {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.liste__chevron {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  transition: transform var(--transition-base);
+}
+
+.liste--ouverte .liste__chevron {
+  transform: rotate(180deg);
+}
+
+.liste__options {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  z-index: 40;
+  display: grid;
+  gap: 2px;
+  max-height: 264px;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  animation: liste-ouverture 160ms var(--ease-out);
+}
+
+.liste__options:focus {
+  outline: none;
+}
+
+@keyframes liste-ouverture {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.liste__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.liste__option--active {
+  background: var(--color-primary-soft);
+}
+
+.liste__option[aria-selected='true'] {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.liste__libelle {
+  flex: 1;
+}
+
+.liste__coche {
+  font-size: 15px;
+  color: var(--color-primary);
+}
+
+.liste__icone {
+  display: inline-grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+/* Variante espace formateur */
+.liste--tdb .liste__bouton {
+  min-height: 48px;
+  background: var(--tdb-panneau);
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  box-shadow: none;
+}
+
+.liste--tdb .liste__bouton:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+}
+
+.liste--tdb .liste__bouton:focus-visible,
+.liste--tdb.liste--ouverte .liste__bouton {
+  background: var(--tdb-carte);
+  border-color: var(--tdb-vert);
+  box-shadow: 0 0 0 4px var(--color-primary-soft);
+}
+
+.liste--tdb .liste__options {
+  border-radius: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liste__options {
+    animation: none;
+  }
+}

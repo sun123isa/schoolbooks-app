@@ -44,7 +44,9 @@ Une plateforme unique où l'on choisit son niveau et sa série/filière. On cher
 
 ### Hors MVP — rien n'est prévu pour ces sujets
 
-Comptes et connexion, favoris, historique, recommandations, commentaires, notation, upload par les utilisateurs, réseau social, IA, notifications, application mobile native.
+Favoris, historique, recommandations, commentaires, notation, réseau social, IA, notifications, application mobile native.
+
+> **Ajouté après le MVP** : seuls les formateurs ont un tableau de bord ; un apprenant crée un compte uniquement pour lire ou télécharger un document (fiches et recherche restent publiques). Comptes apprenant / formateur (cookies HTTP-only, access et refresh tokens), publication de livres PDF par les formateurs, tableau de bord formateur. Voir [§ 6](#6-référence-de-lapi) (« Comptes et authentification », « Livres des formateurs ») et [§ 7](#7-routes-frontend).
 
 ### Règles métier
 
@@ -174,7 +176,7 @@ schoolbooks/
 ```
 
 - **Mode mock** (`npm run dev:web:mocks`) : `apiGet()` n'appelle pas le réseau et renvoie les données de `@schoolbooks/shared/mocks`. Le frontend avance ainsi sans backend.
-- **État actuel des squelettes backend** : les services renvoient encore ces mêmes données fictives. Chaque responsable remplace le mock par son repository SQL **sans changer le format de réponse**, donc sans impact pour le frontend.
+- **Backend** : toutes les routes lisent PostgreSQL et le stockage, au même format que les mocks. Les tests (`apps/api/test`) tournent sans base : `test/setup/base-fictive.js` remplace les repositories par des versions en mémoire construites sur ces données fictives.
 - **Stockage des PDF** : sur disque, dans `apps/api/storage/` (variable `STORAGE_DIR`), **hors Git**. `books.file_path` est relatif à ce dossier. Les fichiers ne sont jamais servis en statique, uniquement par les routes `/fichier` et `/telechargement`.
 
 ---
@@ -201,17 +203,11 @@ npm install
 # 3. Créer la base
 psql -U postgres -c "CREATE DATABASE schoolbooks_db;"
 
-# 4. Exécuter les migrations puis les seeds, dans l'ordre
-psql -U postgres -d schoolbooks_db -f database/migrations/001_create_learners.sql
-psql -U postgres -d schoolbooks_db -f database/migrations/002_create_trainers.sql
-psql -U postgres -d schoolbooks_db -f database/migrations/003_create_books.sql
-psql -U postgres -d schoolbooks_db -f database/migrations/004_create_referentiels.sql
-psql -U postgres -d schoolbooks_db -f database/migrations/005_extend_books_for_resources.sql
-psql -U postgres -d schoolbooks_db -f database/seeds/001_seed_schoolbooks.sql
-psql -U postgres -d schoolbooks_db -f database/seeds/002_seed_referentiels_ressources.sql
-
-# 5. Configurer l'API : copier l'exemple puis renseigner le mot de passe PostgreSQL
+# 4. Configurer l'API : copier l'exemple puis renseigner le mot de passe PostgreSQL
 cp apps/api/.env.example apps/api/.env
+
+# 5. Exécuter les migrations puis les seeds non encore joués (table schema_migrations)
+npm run db:migrate -- --seed
 
 # 6. Générer les PDF de démonstration dans apps/api/storage/
 npm run storage:demo
@@ -222,7 +218,40 @@ npm run dev
 
 Ouvrir **http://localhost:5173**. En développement, le frontend appelle `/api/...` et Vite relaie ces appels vers `http://localhost:3000`.
 
-> Les migrations 004 et 005 et le seed 002 sont **rejouables**. Le seed 001 (historique) ne l'est pas : il ne faut l'exécuter qu'une fois.
+> `db:migrate` n'exécute chaque fichier qu'une fois. Les migrations 004 à 006 et les seeds 002 et 003 sont en plus **rejouables** à la main avec `psql -f` ; le seed 001 (historique) ne l'est pas. Sur une base créée avant `db:migrate` (sans table `schema_migrations`), jouer seulement la migration 006 et le seed 003 avec `psql -f`, puis `npm run db:migrate` sans `--seed`.
+>
+> La migration 006 utilise les extensions `unaccent` et `pg_trgm` (fournies avec PostgreSQL ; droit de création d'extension requis).
+
+### Mise en production (base vide)
+
+En production, la base démarre **sans aucune donnée de démonstration** :
+
+```bash
+npm run db:migrate          # migrations 001 à 008 : schéma + référentiels (niveaux, filières, matières, types)
+# NE PAS lancer --seed ni storage:demo : les seeds et les PDF de démonstration sont réservés au développement local.
+```
+
+Le catalogue se remplit ensuite par les formateurs (`/inscription?role=formateur` puis « Ajouter un livre ») ou par `npm run catalogue:importer`. Renseigner `JWT_ACCESS_SECRET` et `JWT_REFRESH_SECRET` (obligatoires en production).
+
+### Déployer le frontend (Netlify ou Vercel)
+
+Le frontend est une application React statique (Vite) ; l'API Express et PostgreSQL s'hébergent à part (Render, Railway, VPS…). Les fichiers de configuration sont prêts à la racine : `netlify.toml` et `vercel.json`.
+
+| Réglage | Valeur |
+|---|---|
+| Dossier de base | racine du dépôt (npm workspaces) |
+| Installation | `npm ci` |
+| Build | `npm run build --workspace=apps/web` |
+| Dossier publié | `apps/web/dist` |
+| Node | 22 |
+
+1. **Renseigner l'URL de l'API** : dans `netlify.toml` (règle `/api/*`) et `vercel.json` (`rewrites`), remplacer `https://API-A-RENSEIGNER.example.com` par l'URL publique de l'API.
+2. **Importer le dépôt** sur Netlify (« Add new site → Import an existing project ») ou Vercel (« Add New → Project ») : les réglages sont lus automatiquement depuis ces fichiers.
+3. **Côté API** : `NODE_ENV=production`, `DATABASE_URL`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `CLIENT_URL=https://votre-site.netlify.app` (ou `.vercel.app`), puis `npm run db:migrate` (sans `--seed`).
+
+Pourquoi un proxy `/api` : le navigateur ne parle qu'au domaine du site, donc les cookies de session HTTP-only (`SameSite=Lax`) sont envoyés sans réglage CORS. Toutes les URL du site (`/livres/…`, `/formateur`…) renvoient vers `index.html` : React Router affiche la bonne page.
+
+> Variante sans proxy (frontend qui appelle l'API sur un autre domaine) : définir `VITE_API_URL=https://api.exemple.com/api` dans les variables du site, et côté API `COOKIE_SAMESITE=none` (HTTPS obligatoire) avec `CLIENT_URL` égal à l'URL du site. Certains navigateurs bloquant les cookies tiers, le proxy reste recommandé.
 
 ### Variables d'environnement
 
@@ -232,7 +261,10 @@ Ouvrir **http://localhost:5173**. En développement, le frontend appelle `/api/.
 | | `PORT` | `3000` | Port de l'API |
 | | `DATABASE_URL` | `postgresql://postgres:MOT_DE_PASSE@localhost:5432/schoolbooks_db` | Connexion PostgreSQL (sans guillemets) |
 | | `CLIENT_URL` | `http://localhost:5173` | Origine du frontend (pour CORS) |
-| | `STORAGE_DIR` | `storage` | Dossier des PDF, relatif à `apps/api` |
+| | `STORAGE_DIR` | `storage` | Dossier des PDF, relatif à `apps/api` (PDF des formateurs : `uploads/books/`) |
+| | `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET` | longue chaîne aléatoire | Signature des jetons (obligatoires en production) |
+| | `ACCESS_TOKEN_TTL` / `REFRESH_TOKEN_TTL` | `900` / `604800` | Durées de vie en secondes |
+| | `COOKIE_SAMESITE` | `lax` | `none` seulement si le frontend appelle l'API sur un autre domaine (HTTPS) |
 | `apps/web/.env.local` (facultatif) | `VITE_USE_MOCKS` | `false` | `true` = données fictives sans backend |
 | | `VITE_API_PROXY_TARGET` | `http://localhost:3000` | Cible du proxy `/api` de Vite |
 | | `VITE_API_URL` | *(vide)* | URL de l'API en production, si elle est sur une autre origine |
@@ -244,7 +276,9 @@ Ouvrir **http://localhost:5173**. En développement, le frontend appelle `/api/.
 | `npm run dev` | API + frontend en parallèle |
 | `npm run dev:api` / `npm run dev:web` | Un seul des deux |
 | `npm run dev:web:mocks` | Frontend seul, avec les données fictives (aucun backend requis) |
-| `npm run storage:demo` | (Re)génère les PDF de démonstration |
+| `npm run db:migrate` | Joue les migrations non encore appliquées (`-- --seed` : les seeds aussi) |
+| `npm run storage:demo` | (Re)génère les PDF de démonstration (copie les vrais sujets du seed 003) |
+| `npm run catalogue:importer -- fichier.json` | Intègre des ressources au catalogue après contrôle BR01–BR06, BR09, BR10 (format en tête de `apps/api/scripts/importer-catalogue.js`) |
 | `npm run lint` | ESLint sur tous les workspaces |
 | `npm test` | Tests : contrat (`packages/shared`), routes (`apps/api`), socle web (`apps/web`) |
 | `npm run build` | Build de production du frontend |
@@ -265,7 +299,7 @@ Ouvrir **http://localhost:5173**. En développement, le frontend appelle `/api/.
 
 | Rôle | Personne | Responsabilité |
 |---|---|---|
-| Lead Projet (PM) | **Gloire MASSENGO** | Planifier, suivre l'avancement, coordonner l'équipe |
+| Lead Projet (PM) | **Emmanuel MASSENGO** | Planifier, suivre l'avancement, coordonner l'équipe |
 | Lead Dev | **HIRWA Jean Baptiste** | Définir l'architecture, encadrer les développeurs, résoudre les problèmes techniques |
 | Lead Repo | **Isaac LELO MAKAYA** | Gérer le dépôt, les branches, les PR, les conventions Git et le CI/CD |
 | Lead Reviewer | **Salem KONGOLO** | Qualité du code, relecture des PR, détection des bugs, validation des merges |
@@ -279,9 +313,26 @@ Ouvrir **http://localhost:5173**. En développement, le frontend appelle `/api/.
 | Salem KONGOLO | Backend | Recherche et filtrage |
 | Emmanuel AYA | Backend | Ressources, fichiers PDF, catalogue |
 
+> Les deux tableaux ci-dessus décrivent la **répartition prévue** au lancement du projet. La participation réelle est détaillée ci-dessous.
+
+### Bilan de participation
+
+| Rôle | Personne | Statut | Contribution |
+|---|---|---|---|
+| Product Manager | **Emmanuel MASSENGO** | Partiel | Tâches de cadrage réalisées, puis plus aucun retour. Aucun suivi du projet, aucune vérification du produit par rapport à l'étude et au MVP. |
+| Business Analyst | **Lys MBAMA** | Réalisé | Tous les documents produits. Accompagnement de l'équipe pendant tout le cycle de production. |
+| Développeur frontend | **HIRWA Jean Baptiste** | Réalisé | Tout le frontend, plus la fusion back / front, la review du code, les tests et le déploiement. |
+| Développeur backend | **Isaac LELO MAKAYA** | Réalisé | Tout le backend et l'ensemble des API. |
+| Développeur backend | **Salem KONGOLO** | Partiel | Environ la moitié du travail réalisée avant son départ. Travail non retenu dans cette version. |
+| Développeurs | 3 autres développeurs | Non réalisé | Aucune participation au projet. |
+
+> Conséquence : les périmètres attribués aux développeurs qui n'ont pas participé (§ 5) ont été réalisés par HIRWA Jean Baptiste (frontend) et Isaac LELO MAKAYA (backend). Les mentions « Responsable » en tête des fichiers reflètent la répartition prévue, pas forcément l'auteur effectif.
+
 ---
 
 ## 5. Délégation des responsabilités
+
+> **Plan initial.** Cette section décrit la délégation prévue au lancement. Pour la réalisation effective, voir le [bilan de participation](#bilan-de-participation).
 
 Chaque responsabilité correspond à **un dossier**. On ne modifie le dossier d'un autre qu'avec son accord : il est automatiquement demandé en relecture via `CODEOWNERS`. Les fichiers squelettes portent en en-tête leur responsable, leur périmètre et une liste `TODO`.
 
@@ -554,7 +605,7 @@ Chaque responsabilité correspond à **un dossier**. On ne modifie le dossier d'
 **Périmètre.** Le détail d'une ressource, la consultation et le téléchargement de son PDF, la protection des fichiers, et la qualité du catalogue à l'intégration.
 
 **Dossiers et fichiers**
-- `apps/api/src/modules/ressources/` — routes, contrôleur, service, repository, `storage.js`, `catalogue.validator.js`, `fixtures/`
+- `apps/api/src/modules/ressources/` — routes, contrôleur, service, repository, `storage.js`, `catalogue.validator.js`, `ressource.sql.js` (fragments SQL partagés avec la recherche)
 - `apps/api/src/modules/books/` (code historique `/api/books`)
 - `packages/shared/src/contract/ressources.schema.js`, `src/mocks/ressources.mock.js` (avec Jean Baptiste)
 
@@ -630,18 +681,18 @@ Les schémas exacts sont dans `packages/shared/src/contract/`. Les codes d'erreu
 | Méthode | Route | Responsable | Statut actuel |
 |---|---|---|---|
 | GET | `/api/health` | Isaac | ✅ réel |
-| GET | `/api/niveaux` | Isaac | 🟡 mock |
-| GET | `/api/niveaux/:code/filieres` | Isaac | 🟡 mock |
-| GET | `/api/matieres` | Isaac | 🟡 mock |
-| GET | `/api/annees` | Isaac | 🟡 mock |
-| GET | `/api/types-documents` | Isaac | 🟡 mock |
-| GET | `/api/ressources` | Salem | 🟡 mock |
-| GET | `/api/ressources/:id` | Emmanuel | 🟡 mock |
-| GET | `/api/ressources/:id/fichier` | Emmanuel | 🟡 PDF d'exemple |
-| GET | `/api/ressources/:id/telechargement` | Emmanuel | 🟡 PDF d'exemple |
+| GET | `/api/niveaux` | Isaac | ✅ réel |
+| GET | `/api/niveaux/:code/filieres` | Isaac | ✅ réel |
+| GET | `/api/matieres` | Isaac | ✅ réel |
+| GET | `/api/annees` | Isaac | ✅ réel |
+| GET | `/api/types-documents` | Isaac | ✅ réel |
+| GET | `/api/ressources` | Salem | ✅ réel |
+| GET | `/api/ressources/:id` | Emmanuel | ✅ réel |
+| GET | `/api/ressources/:id/fichier` | Emmanuel | ✅ réel |
+| GET | `/api/ressources/:id/telechargement` | Emmanuel | ✅ réel |
 | GET/POST | `/api/books`, `/api/books/:id`, `/api/books/:id/download` | Emmanuel | ✅ historique |
 
-Un statut « mock » signifie que la route respecte déjà le contrat (format, validation, codes d'erreur) mais renvoie les données fictives. Il reste au responsable à brancher la base.
+Toutes les routes lisent la base PostgreSQL (migrations 004 à 006) et le stockage `STORAGE_DIR`.
 
 ### Erreurs communes à toutes les routes
 
@@ -785,11 +836,15 @@ Erreurs : **404 `RESSOURCE_INTROUVABLE`**, 400 `VALIDATION_ERROR` (id qui n'est 
 
 ### GET `/api/ressources/:id/fichier` — Emmanuel
 
+**Réservé aux comptes connectés** (401 `NON_AUTHENTIFIE` sinon) : la fiche est publique, le document ne l'est pas.
+
 Renvoie le PDF à afficher dans la page : `Content-Type: application/pdf`, `Content-Disposition: inline`, `Cache-Control: private, no-store`.
 
 Erreurs (JSON) : **404 `RESSOURCE_INTROUVABLE`**, **404 `FICHIER_INDISPONIBLE`** (BR06), 400 `VALIDATION_ERROR`.
 
 ### GET `/api/ressources/:id/telechargement` — Emmanuel
+
+**Réservé aux comptes connectés** (401 `NON_AUTHENTIFIE` sinon).
 
 Renvoie le PDF en pièce jointe (`Content-Disposition: attachment; filename="…"`).
 
@@ -806,15 +861,51 @@ Erreurs (JSON) :
 | 422 | `RESSOURCE_INCOMPLETE` | BR01/BR03/BR04/BR05 non respectées |
 | 409 | `DOUBLON` | BR09 : ressource déjà présente |
 
-### Routes historiques `/api/books` — Emmanuel
+### Comptes et authentification — `/api/auth`
 
-Ces routes existaient avant le MVP et sont conservées telles quelles (format snake_case, livres collège du seed 001) :
-- `GET /api/books?level=&subject=&q=` ;
-- `GET /api/books/:id` ;
-- `GET /api/books/:id/download` ;
-- `POST /api/books` (upload multipart, champ `file`).
+Les jetons ne figurent **jamais** dans le corps des réponses : l'API pose deux cookies **HTTP-only** (`SameSite=Lax`, `Secure` en production).
 
-Le frontend MVP **ne les utilise pas**.
+| Cookie | Contenu | Chemin | Durée (défaut) |
+|---|---|---|---|
+| `sb_access` | access token (JWT HS256) | `/api` | 15 min (`ACCESS_TOKEN_TTL`) |
+| `sb_refresh` | refresh token, stocké haché (SHA-256) en base, à usage unique | `/api/auth` | 7 jours (`REFRESH_TOKEN_TTL`) |
+
+| Méthode | Route | Corps | Réponse |
+|---|---|---|---|
+| POST | `/api/auth/register/learner` | `prenom, nom, email, motDePasse, niveau` (code de `/api/school-levels`), `telephone?` | 201 `{ utilisateur }` + cookies |
+| POST | `/api/auth/register/trainer` | `prenom, nom, email, motDePasse, specialite`, `telephone?`, `bio?` | 201 `{ utilisateur }` + cookies |
+| POST | `/api/auth/login` | `email, motDePasse` | 200 `{ utilisateur }` + cookies |
+| POST | `/api/auth/refresh` | — (cookie `sb_refresh`) | 200 `{ utilisateur }` + nouveaux cookies (rotation) |
+| GET | `/api/auth/me` | — (cookie `sb_access`) | 200 `{ utilisateur }` (restauration de session) |
+| POST | `/api/auth/logout` | — | 200, session révoquée et cookies effacés |
+
+`utilisateur` : `{ id, role: 'learner' | 'trainer', prenom, nom, email, niveau, specialite }`. Mot de passe : 8 caractères minimum, au moins une lettre et un chiffre, haché avec scrypt. Connexion et inscription limitées à 20 tentatives par IP et par quart d'heure.
+
+Erreurs : 401 `NON_AUTHENTIFIE` (access token absent/expiré : le frontend appelle alors `/refresh` puis rejoue la requête), 401 `SESSION_EXPIREE`, 401 `IDENTIFIANTS_INVALIDES`, 403 `ACCES_INTERDIT`, 409 `EMAIL_DEJA_UTILISE`, 429 `TROP_DE_REQUETES`.
+
+### Référentiels des formulaires
+
+- `GET /api/school-levels` → `[{ id, code, libelle, filieres: [{ id, code, libelle }] }]`
+- `GET /api/subjects` → `[{ id, code, libelle }]`
+
+### Livres des formateurs — `/api/books`
+
+Un livre est une ligne de `books` rattachée aux référentiels **et publiée par un formateur** (`trainer_id`) : il apparaît aussi dans la recherche `/api/ressources`, tandis que `/api/books` ne liste que les livres des formateurs. Les PDF sont rangés sous `STORAGE_DIR/uploads/books/<uuid>.pdf` et ne sont jamais servis en statique.
+
+| Méthode | Route | Accès | Rôle |
+|---|---|---|---|
+| GET | `/api/books?q=&niveau=&matiere=&page=&limit=&tri=` | public | Catalogue : mot-clé (sans casse ni accents), filtres, pagination, tri `recent` / `titre` / `telechargements` |
+| GET | `/api/books/:id` | public | Fiche (`disponible`, `urls.fichier`, `urls.telechargement`, `telechargements`) |
+| GET | `/api/uploads/books/:fileName` | connecté | Lecture du PDF dans le navigateur (`inline`) |
+| GET | `/api/books/:id/download` | connecté | Téléchargement (`attachment`), compteur incrémenté ; 403 si non téléchargeable |
+| GET | `/api/books/trainer/mine` | formateur | `{ items, statistiques: { livres, telechargements, actifs, matieres } }` |
+| POST | `/api/books` | formateur | Création, `multipart/form-data` : `titre, niveau, matiere`, `filiere?, type?` (défaut `livre`), `annee?, auteur?, description?, droits?, telechargeable?` + PDF dans `fichier` (25 Mo max) |
+| PATCH | `/api/books/trainer/:id` | propriétaire | Modification (JSON ou multipart ; nouveau PDF facultatif, l'ancien est supprimé) |
+| DELETE | `/api/books/trainer/:id` | propriétaire | Désactivation (retiré du catalogue, visible du seul propriétaire) |
+| PATCH | `/api/books/trainer/:id/restore` | propriétaire | Restauration |
+| DELETE | `/api/books/trainer/:id/permanent` | propriétaire | Suppression définitive (ligne et PDF) |
+
+Erreurs : 404 `LIVRE_INTROUVABLE`, 400 `FICHIER_REQUIS` / `FICHIER_INVALIDE` (signature `%PDF-` vérifiée) / `REFERENTIEL_INCONNU` / `FILIERE_INCOMPATIBLE`, 413 `FICHIER_TROP_VOLUMINEUX`, 422 `RESSOURCE_INCOMPLETE` (année exigée par le type), 409 `DOUBLON` (BR09 : même PDF, ou même titre / niveau / matière / type / année), 403 `ACCES_INTERDIT` (livre d'un autre formateur), 403 `TELECHARGEMENT_NON_AUTORISE`.
 
 ---
 
@@ -825,9 +916,17 @@ Le frontend MVP **ne les utilise pas**.
 | `/` | Landing page : présentation et choix niveau → série/filière | HIRWA Jean Baptiste | — |
 | `/recherche` | Recherche, filtres, résultats | Graciel MBEMBA | `?q=&niveau=&filiere=&matiere=&annee=&type=&page=&tri=` (mêmes noms que l'API) |
 | `/ressources/:id` | Fiche, visionneuse PDF, téléchargement | Karene MOUSSOUNDA | `id` = UUID ; état de navigation `retour` (recherche d'origine) |
+| `/connexion` | Connexion plein écran (retour à la page demandée) | — | `?role=formateur`, état `depuis` |
+| `/inscription` | Inscription apprenant (depuis un document) ou formateur | — | `?role=formateur`, état `depuis` et `titre` |
+| `/livres` | Catalogue des livres : mot-clé, niveau, matière, tri, pagination | — | `?q=&niveau=&matiere=&tri=&page=` |
+| `/livres/:id` | Fiche, lecture du PDF, téléchargement (connecté) | — | `id` = UUID |
+| `/formateur` | Tableau de bord formateur : statistiques, publications par jour, rappel, livres récents et populaires, état du catalogue, chronomètre, export CSV | — | réservé aux formateurs (gabarit à barre latérale) |
+| `/formateur/livres` | Gestion : modifier, désactiver, restaurer, supprimer | — | réservé aux formateurs |
+| `/formateur/livres/nouveau` | Ajout d'un livre (upload PDF) | — | réservé aux formateurs |
+| `/formateur/livres/:id/modifier` | Modification d'un livre | — | réservé au propriétaire |
 | `*` | Page 404 | HIRWA Jean Baptiste | — |
 
-Les liens se construisent avec `cheminRecherche()`, `cheminRessource()` et `cheminRetourRecherche()` (`apps/web/src/app/routes.js`), jamais en dur.
+Les liens se construisent avec `cheminRecherche()`, `cheminRessource()`, `cheminRetourRecherche()`, `cheminLivre()`, `cheminLivres()`, `cheminModifierLivre()` et `cheminInscription()` (`apps/web/src/app/routes.js`), jamais en dur.
 
 ---
 

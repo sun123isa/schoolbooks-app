@@ -1,7 +1,6 @@
 // =============================================================================
 // Module RÉFÉRENTIELS — repository (requêtes SQL uniquement, aucune logique métier)
 // Responsable : Isaac LELO MAKAYA — relecture : Salem KONGOLO
-// ÉTAT : SQUELETTE — requêtes prêtes à brancher dans referentiels.service.js.
 // Tables : levels, tracks, subjects, document_types (database/migrations/004).
 // Les colonnes SQL sont en anglais (convention existante) ; le repository
 // renvoie directement les noms du contrat (code, libelle, niveau, requiertAnnee).
@@ -39,7 +38,9 @@ export async function findAnnees() {
   const { rows } = await pool.query(
     `SELECT DISTINCT year AS annee
        FROM books
-      WHERE is_active = TRUE AND level_id IS NOT NULL AND year IS NOT NULL
+      WHERE is_active = TRUE
+        AND level_id IS NOT NULL AND subject_id IS NOT NULL AND document_type_id IS NOT NULL
+        AND year IS NOT NULL
       ORDER BY year DESC`
   );
   return rows.map((row) => row.annee);
@@ -49,5 +50,29 @@ export async function findTypesDocuments() {
   const { rows } = await pool.query(
     'SELECT code, label AS libelle, requires_year AS "requiertAnnee" FROM document_types ORDER BY sort_order, label'
   );
+  return rows;
+}
+
+// GET /api/school-levels : niveaux avec identifiant et séries/filières imbriquées
+// (formulaires d'inscription et d'ajout de livre).
+export async function findNiveauxScolaires() {
+  const { rows } = await pool.query(
+    `SELECT l.id, l.code, l.label AS libelle,
+            COALESCE(
+              json_agg(json_build_object('id', t.id, 'code', t.code, 'libelle', t.label) ORDER BY t.sort_order, t.label)
+                FILTER (WHERE t.id IS NOT NULL),
+              '[]'
+            ) AS filieres
+       FROM levels l
+       LEFT JOIN tracks t ON t.level_id = l.id
+      GROUP BY l.id
+      ORDER BY l.sort_order, l.label`
+  );
+  return rows;
+}
+
+// GET /api/subjects : matières avec identifiant.
+export async function findMatieresAvecId() {
+  const { rows } = await pool.query('SELECT id, code, label AS libelle FROM subjects ORDER BY label');
   return rows;
 }

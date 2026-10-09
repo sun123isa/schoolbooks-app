@@ -11,7 +11,7 @@ export const pool = new Pool({
 
 
 
-// Test de connexion au démarrage (à supprimer après)
+// Vérification de la connexion au démarrage (journal du serveur).
 // Ignoré pendant les tests automatisés (pas de base de données en CI).
 if (process.env.NODE_ENV !== 'test') pool.query('SELECT NOW()', (err, res) => {
   if (err) {

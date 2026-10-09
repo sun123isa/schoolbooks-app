@@ -10,14 +10,17 @@
 import express from 'express';
 import { RessourceIdParamsSchema } from '@schoolbooks/shared';
 import { validate } from '../../middlewares/validate.middleware.js';
+import { authentifier } from '../../middlewares/auth.middleware.js';
 import * as controller from './ressources.controller.js';
 
 const router = express.Router();
 
 const validerId = validate({ params: RessourceIdParamsSchema });
 
+// La fiche est publique ; le document (lecture et téléchargement) est réservé
+// aux comptes connectés : un apprenant s'inscrit pour accéder aux documents.
 router.get('/:id', validerId, controller.obtenirRessource);
-router.get('/:id/fichier', validerId, controller.consulterFichier);
-router.get('/:id/telechargement', validerId, controller.telechargerFichier);
+router.get('/:id/fichier', validerId, authentifier, controller.consulterFichier);
+router.get('/:id/telechargement', validerId, authentifier, controller.telechargerFichier);
 
 export default router;

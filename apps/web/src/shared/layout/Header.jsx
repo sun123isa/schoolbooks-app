@@ -1,23 +1,140 @@
 // =============================================================================
-// Socle frontend — en-tête et navigation principale
+// Socle frontend — en-tête fixe et navigation principale
 // Responsable : HIRWA Jean Baptiste (Lead Dev) — relecture : Salem KONGOLO
-// TODO (Jean Baptiste) : logo, menu responsive (smartphone), lien d'évitement clavier.
+// Ordinateur : logo | navigation centrale | recherche + bouton principal.
+// Tablette et mobile (< 1080 px) : logo + bouton menu qui déplie la navigation.
+// Une ombre apparaît dès que la page défile (useDefilement).
 // =============================================================================
-import { Link, NavLink } from 'react-router-dom';
-import { ROUTES } from '../../app/routes.js';
+import { useEffect, useId, useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import {
+  ChalkboardTeacherIcon,
+  ListIcon,
+  MagnifyingGlassIcon,
+  SignInIcon,
+  SignOutIcon,
+  SquaresFourIcon,
+  UserCircleIcon,
+  XIcon
+} from '@phosphor-icons/react';
+import { ROLES } from '@schoolbooks/shared';
+import { ROUTES, cheminRecherche } from '../../app/routes.js';
+import { useAuth } from '../auth/AuthContext.jsx';
+import { useDefilement } from '../hooks/useMouvement.js';
+import { Button } from '../components/ui/Button.jsx';
+import { InactiveLink } from '../components/ui/InactiveLink.jsx';
+import { Logo } from '../components/ui/Logo.jsx';
+import { ENTETE, NAVIGATION } from './layout.content.js';
+
+function LienNavigation({ item, onNavigate }) {
+  if (!item.to) return <InactiveLink className="header__nav-link">{item.libelle}</InactiveLink>;
+  if (item.page) {
+    return (
+      <NavLink to={item.to} end={item.end} className="header__nav-link" onClick={onNavigate}>
+        {item.libelle}
+      </NavLink>
+    );
+  }
+  return (
+    <Link to={item.to} className="header__nav-link" onClick={onNavigate}>
+      {item.libelle}
+    </Link>
+  );
+}
+
+// Visiteur : « Connexion » (apprenants déjà inscrits) et « Espace formateur ».
+// Les apprenants ne s'inscrivent qu'au moment d'ouvrir un document (AccesReserve).
+// Connecté : tableau de bord (formateur), prénom et déconnexion.
+function ActionsCompte({ onNavigate }) {
+  const { utilisateur, pret, deconnecter } = useAuth();
+  const navigate = useNavigate();
+
+  if (!pret) return null;
+  if (!utilisateur) {
+    return (
+      <>
+        <Button to={ROUTES.connexion} size="sm" variant="outline" iconLeft={SignInIcon} onClick={onNavigate}>
+          {ENTETE.connexion}
+        </Button>
+        <Button to={ROUTES.tableauDeBord} size="sm" iconLeft={ChalkboardTeacherIcon} onClick={onNavigate}>
+          {ENTETE.espaceFormateur}
+        </Button>
+      </>
+    );
+  }
+
+  async function seDeconnecter() {
+    onNavigate();
+    await deconnecter();
+    navigate(ROUTES.accueil);
+  }
+
+  return (
+    <>
+      {utilisateur.role === ROLES.formateur && (
+        <Button to={ROUTES.tableauDeBord} size="sm" iconLeft={SquaresFourIcon} onClick={onNavigate}>
+          {ENTETE.tableauDeBord}
+        </Button>
+      )}
+      <span className="header__compte" title={utilisateur.email}>
+        <UserCircleIcon weight="duotone" aria-hidden="true" />
+        {utilisateur.prenom}
+      </span>
+      <button type="button" className="header__icon-btn" aria-label={ENTETE.deconnexion} title={ENTETE.deconnexion} onClick={seDeconnecter}>
+        <SignOutIcon weight="bold" aria-hidden="true" />
+      </button>
+    </>
+  );
+}
 
 export function Header() {
+  const [menuOuvert, setMenuOuvert] = useState(false);
+  const idMenu = useId();
+  const defile = useDefilement();
+  const fermer = () => setMenuOuvert(false);
+
+  // Échap ferme le menu mobile.
+  useEffect(() => {
+    if (!menuOuvert) return undefined;
+    const surTouche = (event) => event.key === 'Escape' && setMenuOuvert(false);
+    window.addEventListener('keydown', surTouche);
+    return () => window.removeEventListener('keydown', surTouche);
+  }, [menuOuvert]);
+
   return (
-    <header className="layout__header">
-      <Link to={ROUTES.accueil} className="layout__brand">
-        Schoolbooks
-      </Link>
-      <nav aria-label="Navigation principale" className="layout__nav">
-        <NavLink to={ROUTES.accueil} end>
-          Accueil
-        </NavLink>
-        <NavLink to={ROUTES.recherche}>Rechercher une ressource</NavLink>
-      </nav>
+    <header className={`header ${menuOuvert ? 'header--ouvert' : ''} ${defile ? 'header--defile' : ''}`}>
+      <div className="container header__inner">
+        <Logo />
+
+        <button
+          type="button"
+          className="header__burger"
+          aria-expanded={menuOuvert}
+          aria-controls={idMenu}
+          aria-label={menuOuvert ? ENTETE.fermerMenu : ENTETE.ouvrirMenu}
+          onClick={() => setMenuOuvert((ouvert) => !ouvert)}
+        >
+          {menuOuvert ? <XIcon weight="bold" aria-hidden="true" /> : <ListIcon weight="bold" aria-hidden="true" />}
+        </button>
+
+        <div className="header__panel" id={idMenu}>
+          <nav aria-label="Navigation principale" className="header__nav">
+            <ul className="header__nav-list">
+              {NAVIGATION.map((item) => (
+                <li key={item.libelle}>
+                  <LienNavigation item={item} onNavigate={fermer} />
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="header__actions">
+            <Link to={cheminRecherche()} className="header__icon-btn" aria-label={ENTETE.rechercher} onClick={fermer}>
+              <MagnifyingGlassIcon weight="bold" aria-hidden="true" />
+            </Link>
+            <ActionsCompte onNavigate={fermer} />
+          </div>
+        </div>
+      </div>
     </header>
   );
 }

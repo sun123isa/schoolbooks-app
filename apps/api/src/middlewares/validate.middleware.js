@@ -26,7 +26,11 @@ export function validate(schemas) {
           new HttpError(
             400,
             ERROR_CODES.VALIDATION_ERROR,
-            source === 'query' ? 'Paramètres de requête invalides' : 'Paramètres invalides',
+            source === 'query'
+              ? 'Paramètres de requête invalides'
+              : source === 'body'
+                ? 'Données invalides'
+                : 'Paramètres invalides',
             versDetails(resultat.error.issues)
           )
         );

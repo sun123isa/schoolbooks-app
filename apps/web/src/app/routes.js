@@ -8,8 +8,45 @@
 export const ROUTES = {
   accueil: '/', // Landing page — Jean Baptiste
   recherche: '/recherche', // Recherche — Graciel
-  ressource: '/ressources/:id' // Consultation — Karene
+  ressource: '/ressources/:id', // Consultation — Karene
+
+  // Comptes
+  connexion: '/connexion',
+  inscription: '/inscription',
+
+  // Livres des formateurs
+  livres: '/livres',
+  livre: '/livres/:id',
+
+  // Espace formateur
+  tableauDeBord: '/formateur',
+  mesLivres: '/formateur/livres',
+  nouveauLivre: '/formateur/livres/nouveau',
+  modifierLivre: '/formateur/livres/:id/modifier'
 };
+
+export function cheminLivre(id) {
+  return ROUTES.livre.replace(':id', encodeURIComponent(id));
+}
+
+export function cheminModifierLivre(id) {
+  return ROUTES.modifierLivre.replace(':id', encodeURIComponent(id));
+}
+
+// /livres?q=…&niveau=…&matiere=…&page=…
+export function cheminLivres(criteres = {}) {
+  const params = new URLSearchParams();
+  for (const [cle, valeur] of Object.entries(criteres)) {
+    if (valeur !== undefined && valeur !== null && String(valeur) !== '') params.set(cle, String(valeur));
+  }
+  const qs = params.toString();
+  return `${ROUTES.livres}${qs ? `?${qs}` : ''}`;
+}
+
+// Inscription avec un rôle pré-sélectionné : /inscription?role=formateur
+export function cheminInscription(role) {
+  return role ? `${ROUTES.inscription}?role=${encodeURIComponent(role)}` : ROUTES.inscription;
+}
 
 // /recherche?niveau=lycee&filiere=serie-c — mêmes noms de paramètres que l'API.
 export function cheminRecherche(criteres = {}) {
@@ -35,4 +72,9 @@ export function cheminRessource(id) {
 export function cheminRetourRecherche(etatNavigation) {
   const retour = etatNavigation?.retour;
   return typeof retour === 'string' && retour.startsWith('?') ? `${ROUTES.recherche}${retour}` : ROUTES.recherche;
+}
+
+// Connexion avec un public pré-sélectionné : /connexion?role=formateur
+export function cheminConnexion(role) {
+  return role ? `${ROUTES.connexion}?role=${encodeURIComponent(role)}` : ROUTES.connexion;
 }

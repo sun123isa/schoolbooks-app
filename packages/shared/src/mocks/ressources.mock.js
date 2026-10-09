@@ -149,6 +149,49 @@ export const RESSOURCES = [
     auteur: 'Direction des examens et concours', tailleOctets: null,
     droits: 'Document officiel — diffusion libre à usage éducatif.',
     dateAjout: '2026-09-11T08:00:00.000Z'
+  }),
+  // Vrais sujets du baccalauréat congolais (PDF dans apps/web/public/mocks/).
+  // Téléchargement désactivé (BR10, interdit par défaut) tant que l'autorisation
+  // de diffusion de l'auteur n'est pas confirmée.
+  ressource({
+    id: '0b6f2a4e-1c3d-4e5f-8a9b-000000000012',
+    titre: 'Baccalauréat série A 2016 — Mathématiques (sujet)',
+    niveau: 'lycee', filiere: 'serie-a', matiere: 'mathematiques', type: 'sujet-examen', annee: 2016,
+    telechargeable: false,
+    description: 'Sujet de mathématiques du baccalauréat série A, session 2016 (République du Congo).',
+    auteur: 'Valérien Eberlin (maths.congo.free.fr)', tailleOctets: 54_142,
+    droits: 'Publié par Valérien Eberlin sur maths.congo.free.fr — autorisation de diffusion à confirmer.',
+    dateAjout: '2026-10-05T08:00:00.000Z'
+  }),
+  ressource({
+    id: '0b6f2a4e-1c3d-4e5f-8a9b-000000000013',
+    titre: 'Baccalauréat série C 2017 — Physique-Chimie (sujet)',
+    niveau: 'lycee', filiere: 'serie-c', matiere: 'physique-chimie', type: 'sujet-examen', annee: 2017,
+    telechargeable: false,
+    description: 'Sujet de physique-chimie du baccalauréat série C, session 2017 (République du Congo) : chimie et physique.',
+    auteur: 'Valérien Eberlin (maths.congo.free.fr)', tailleOctets: 78_399,
+    droits: 'Publié par Valérien Eberlin sur maths.congo.free.fr — autorisation de diffusion à confirmer.',
+    dateAjout: '2026-10-05T08:01:00.000Z'
+  }),
+  ressource({
+    id: '0b6f2a4e-1c3d-4e5f-8a9b-000000000014',
+    titre: 'Baccalauréat série A 2020 — Mathématiques (corrigé)',
+    niveau: 'lycee', filiere: 'serie-a', matiere: 'mathematiques', type: 'corrige', annee: 2020,
+    telechargeable: false,
+    description: 'Corrigé détaillé, exercice par exercice, du sujet de mathématiques du baccalauréat série A, session 2020.',
+    auteur: 'Valérien Eberlin (maths.congo.free.fr)', tailleOctets: 75_492,
+    droits: 'Publié par Valérien Eberlin sur maths.congo.free.fr — autorisation de diffusion à confirmer.',
+    dateAjout: '2026-10-05T08:02:00.000Z'
+  }),
+  ressource({
+    id: '0b6f2a4e-1c3d-4e5f-8a9b-000000000015',
+    titre: 'Baccalauréat série C 2020 — Mathématiques (sujet)',
+    niveau: 'lycee', filiere: 'serie-c', matiere: 'mathematiques', type: 'sujet-examen', annee: 2020,
+    telechargeable: false,
+    description: 'Sujet de mathématiques du baccalauréat série C, session 2020 (République du Congo).',
+    auteur: 'Valérien Eberlin (maths.congo.free.fr)', tailleOctets: 55_626,
+    droits: 'Publié par Valérien Eberlin sur maths.congo.free.fr — autorisation de diffusion à confirmer.',
+    dateAjout: '2026-10-05T08:03:00.000Z'
   })
 ];
 

@@ -1,0 +1,323 @@
+/* =============================================================================
+   Socle frontend — composants d'interface communs (Button, Badge, Logo, Reveal)
+   Responsable : HIRWA Jean Baptiste (Lead Dev)
+   ============================================================================= */
+
+/* --- Bouton ------------------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn__icon--right {
+  transition: transform var(--transition-base);
+}
+
+.btn:hover .btn__icon--right {
+  transform: translateX(4px);
+}
+
+/* Reflet lumineux qui traverse les boutons pleins au survol. */
+.btn--primary,
+.btn--light,
+.btn--accent {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn--primary::after,
+.btn--light::after,
+.btn--accent::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--reflet);
+  transform: translateX(-120%);
+  transition: transform 700ms var(--ease-out);
+}
+
+.btn--primary:hover::after,
+.btn--light:hover::after,
+.btn--accent:hover::after {
+  transform: translateX(120%);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn--sm {
+  min-height: 40px;
+  padding: 0 16px;
+  gap: 8px;
+}
+
+.btn__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.btn--sm .btn__icon {
+  width: 16px;
+  height: 16px;
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-primary);
+}
+
+.btn--primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn--outline {
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
+  color: var(--color-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn--outline:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.btn--accent {
+  background: var(--color-accent);
+  color: var(--color-primary-darker);
+}
+
+.btn--accent:hover {
+  background: var(--color-accent-hover);
+}
+
+/* Sur fond sombre ou photo : contour blanc transparent. */
+.btn--ghost-light {
+  background: transparent;
+  border-color: var(--color-on-primary-muted);
+  color: var(--color-on-primary);
+}
+
+.btn--ghost-light:hover {
+  border-color: var(--color-on-primary);
+  background: var(--color-hover-on-dark);
+}
+
+/* Sur fond sombre : bouton blanc, texte vert. */
+.btn--light {
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+
+.btn--light:hover {
+  background: var(--color-primary-soft);
+}
+
+.btn--ghost-light:focus-visible,
+.btn--light:focus-visible {
+  outline-color: var(--color-focus-on-dark);
+}
+
+/* --- Badge -------------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.badge--upper {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.6875rem;
+}
+
+.badge__icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.badge--neutral {
+  background: var(--color-chip);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.badge--primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.badge--accent {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent-strong);
+}
+
+.badge--accent-solid {
+  background: var(--color-accent);
+  color: var(--color-text);
+}
+
+.badge--success {
+  background: var(--color-success-soft);
+  border-color: var(--color-success-border);
+  color: var(--color-success-strong);
+}
+
+.badge--outline {
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
+  color: var(--color-primary);
+}
+
+/* --- Logo ------------------------------------------------------------------------ */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo__mark {
+  width: 34px;
+  height: 38px;
+}
+
+.logo__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.logo__name {
+  font-family: var(--font-heading);
+  font-size: 1.1875rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.logo__tagline {
+  margin-top: 4px;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Variante claire (pied de page sur fond vert foncé). */
+.logo--clair .logo__name {
+  color: var(--color-on-primary);
+}
+
+.logo--clair .logo__tagline {
+  color: var(--color-on-primary-muted);
+}
+
+/* --- Reveal ------------------------------------------------------------------------ */
+.reveal--cache {
+  opacity: 0;
+}
+
+.reveal--cache.reveal--monter {
+  transform: translateY(28px);
+}
+
+.reveal--cache.reveal--gauche {
+  transform: translateX(-40px);
+}
+
+.reveal--cache.reveal--droite {
+  transform: translateX(40px);
+}
+
+.reveal--cache.reveal--zoom {
+  transform: scale(0.92);
+}
+
+.reveal--cache.reveal--devoiler {
+  opacity: 1;
+  clip-path: inset(0 0 100% 0 round var(--radius-xl));
+}
+
+.reveal--visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 700ms var(--ease-out) var(--reveal-delay, 0ms),
+    transform 800ms var(--ease-out) var(--reveal-delay, 0ms);
+}
+
+/* Le rideau ne masque que pendant l'animation : rien n'est rogné ensuite. */
+.reveal--visible.reveal--devoiler {
+  animation: rideau 1100ms var(--ease-out) var(--reveal-delay, 0ms) backwards;
+}
+
+@keyframes rideau {
+  from {
+    clip-path: inset(0 0 100% 0 round var(--radius-xl));
+  }
+  to {
+    clip-path: inset(0 0 0 0 round var(--radius-xl));
+  }
+}
+
+/* Enfants animés en cascade une fois le parent visible :
+   <Reveal className="cascade"><p style={{ '--i': 0 }}>…</p><p style={{ '--i': 1 }}>…</p></Reveal> */
+.reveal--cache.cascade > * {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.reveal--visible.cascade > * {
+  animation: entree-monter 700ms var(--ease-out) both;
+  animation-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * 110ms);
+}
+
+@keyframes entree-monter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
