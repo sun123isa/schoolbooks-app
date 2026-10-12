@@ -71,7 +71,7 @@ FROM (VALUES
    'Sujet officiel de l''épreuve de mathématiques du baccalauréat série C, session 2023.'::text,
    'lycee'::text, 'serie-c'::text, 'mathematiques'::text, 'sujet-examen'::text, 2023::smallint, TRUE,
    'Document officiel — diffusion libre à usage éducatif.'::text, 'ressources/bac-c-2023-mathematiques-sujet.pdf'::text, 412000::bigint),
-  ('Baccalauréat série C 2023 — Mathématiques (corrigé)', 'Équipe pédagogique Schoolbooks',
+  ('Baccalauréat série C 2023 — Mathématiques (corrigé)', 'Équipe pédagogique schoolbooks',
    'Corrigé détaillé, exercice par exercice, du sujet de mathématiques 2023.',
    'lycee', 'serie-c', 'mathematiques', 'corrige', 2023, TRUE,
    'Rédigé par l''équipe — licence CC BY-NC 4.0.', 'ressources/bac-c-2023-mathematiques-corrige.pdf', 655000),

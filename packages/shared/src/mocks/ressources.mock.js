@@ -55,7 +55,7 @@ export const RESSOURCES = [
     niveau: 'lycee', filiere: 'serie-c', matiere: 'mathematiques', type: 'corrige', annee: 2023,
     telechargeable: true,
     description: 'Corrigé détaillé, exercice par exercice, du sujet de mathématiques 2023.',
-    auteur: 'Équipe pédagogique Schoolbooks', tailleOctets: 655_000,
+    auteur: 'Équipe pédagogique schoolbooks', tailleOctets: 655_000,
     droits: 'Rédigé par l’équipe — licence CC BY-NC 4.0.',
     dateAjout: '2026-09-02T08:00:00.000Z'
   }),

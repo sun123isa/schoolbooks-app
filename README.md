@@ -1,4 +1,4 @@
-# Schoolbooks
+# schoolbooks
 
 Plateforme web qui centralise les **sujets d'examens, livres et supports pédagogiques** des lycéens et des étudiants. Les ressources sont classées par niveau, série/filière, matière, année et type de document.
 
