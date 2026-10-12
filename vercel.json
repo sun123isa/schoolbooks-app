@@ -1,12 +1,13 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "$schema": "https://vercel.sh",
   "services": {
     "api": {
       "root": "apps/api",
-      "framework": "express"
+      "framework": "express",
+      "buildCommand": "echo 'Pas de build nécessaire pour le backend'"
     },
     "web": {
-      "root": "apps/web",  
+      "root": "apps/web",
       "framework": "vite"
     }
   },
@@ -20,8 +21,13 @@
     {
       "source": "/(.*)",
       "destination": {
-        "service": "web" 
+        "service": "web"
       }
     }
   ]
 }
+
+
+
+
+
