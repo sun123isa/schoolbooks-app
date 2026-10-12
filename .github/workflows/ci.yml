@@ -1,0 +1,80 @@
+# =============================================================================
+# Intégration continue — lint, tests, build, migrations SQL
+# Responsable : Isaac LELO MAKAYA (Lead Repo) — relecture : Salem KONGOLO
+# Exécutée sur chaque PR vers dev ou main, et à chaque push sur ces branches.
+# Les deux jobs doivent être verts pour merger (protection de branche).
+# =============================================================================
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qualite:
+    name: Lint, tests et build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installation des dépendances
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  migrations:
+    name: Migrations et seeds PostgreSQL
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: schoolbooks_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: schoolbooks_db
+    steps:
+      - uses: actions/checkout@v4
+
+      # Chaque script est exécuté deux fois : les migrations et seeds doivent être rejouables.
+      - name: Migrations puis seeds (deux passages)
+        run: |
+          for passage in 1 2; do
+            for f in database/migrations/*.sql database/seeds/*.sql; do
+              case "$passage-$f" in
+                # Le seed historique 001 n'est pas idempotent : un seul passage.
+                2-database/seeds/001_seed_schoolbooks.sql) continue ;;
+              esac
+              echo "▶ $f (passage $passage)"
+              psql -v ON_ERROR_STOP=1 -q -f "$f"
+            done
+          done

@@ -1,20 +1,25 @@
 {
-  "name": "schoolbooks-app",
+  "name": "schoolbooks",
   "version": "1.0.0",
   "private": true,
-  "description": "Application de gestion des apprenants, livres et formateurs",
+  "description": "Plateforme de ressources éducatives : sujets d'examens, livres et supports pédagogiques",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace=apps/api\" \"npm run dev --workspace=apps/web\"",
+    "dev": "concurrently -n api,web -c blue,magenta \"npm run dev --workspace=apps/api\" \"npm run dev --workspace=apps/web\"",
     "dev:api": "npm run dev --workspace=apps/api",
     "dev:web": "npm run dev --workspace=apps/web",
-    "build": "npm run build --workspaces",
-    "lint": "npm run lint --workspaces",
-    "test": "npm run test --workspaces",
-    "format": "prettier --write ."
+    "dev:web:mocks": "npm run dev --workspace=apps/web -- --mode mocks",
+    "storage:demo": "npm run storage:demo --workspace=apps/api",
+    "db:migrate": "npm run db:migrate --workspace=apps/api --",
+    "catalogue:importer": "npm run catalogue:importer --workspace=apps/api --",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "concurrently": "^10.0.5",

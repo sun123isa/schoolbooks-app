@@ -1,0 +1,70 @@
+# =============================================================================
+# CODEOWNERS — qui doit approuver une PR selon les fichiers modifiés
+# Responsable : Isaac LELO MAKAYA (Lead Repo) — validé par HIRWA Jean Baptiste (Lead Dev)
+#
+# Règles :
+#   - Salem KONGOLO (Lead Reviewer) est relecteur de tout le dépôt ;
+#   - le socle frontend et l'architecture (contrat partagé, configuration
+#     racine) sont rattachés à HIRWA Jean Baptiste ;
+#   - chaque développeur est propriétaire de son dossier ;
+#   - quand Salem est l'auteur (module recherche), Jean Baptiste relit.
+# Une PR est mergeable quand au moins un propriétaire (autre que l'auteur) l'a
+# approuvée — à activer dans la protection de branche « Require review from Code Owners ».
+# En cas de règles multiples, c'est la DERNIÈRE règle correspondante qui s'applique.
+#
+# ⚠ À FAIRE (Isaac) : remplacer chaque pseudo ci-dessous par le vrai compte GitHub.
+#   @JBixx     HIRWA Jean Baptiste   Lead Dev — frontend landing + socle
+#   @PSEUDO_GRACIEL   Graciel MBEMBA        frontend recherche
+#   @karenemoussounda2-web    Karene MOUSSOUNDA     frontend consultation
+#   @sun123isa     Isaac LELO MAKAYA     Lead Repo — backend socle + référentiels
+#   @salem-devs     Salem KONGOLO         Lead Reviewer — backend recherche
+#   @VicAy007   Emmanuel AYA          backend ressources et fichiers
+#   @PSEUDO_GLOIRE    Gloire MASSENGO       Lead Projet (documentation)
+# =============================================================================
+
+# Par défaut : architecture (Lead Dev) + relecture (Lead Reviewer).
+*                                          @JBixx @salem-devs
+
+# --- Architecture et contrat partagé (Jean Baptiste) -------------------------
+/package.json                              @JBixx @salem-devs
+/package-lock.json                         @JBixx @salem-devs
+/packages/shared/                          @JBixx @salem-devs
+/packages/shared/src/contract/referentiels.schema.js  @sun123isa @JBixx @salem-devs
+/packages/shared/src/contract/errors.js               @sun123isa @JBixx @salem-devs
+/packages/shared/src/contract/recherche.schema.js     @salem-devs @JBixx
+/packages/shared/src/contract/ressources.schema.js    @VicAy007  @JBixx @salem-devs
+/packages/shared/src/mocks/referentiels.mock.js       @sun123isa @JBixx @salem-devs
+/packages/shared/src/mocks/ressources.mock.js         @VicAy007  @salem-devs @JBixx
+
+# --- Frontend ----------------------------------------------------------------
+# Socle partagé (layout, routeur, client API, composants communs) : Jean Baptiste.
+/apps/web/                                 @JBixx @salem-devs
+/apps/web/src/pages/landing/               @JBixx @salem-devs
+/apps/web/src/pages/recherche/             @PSEUDO_GRACIEL @salem-devs
+/apps/web/src/pages/ressource/             @karenemoussounda2-web @salem-devs
+/apps/web/public/mocks/                    @karenemoussounda2-web @salem-devs
+
+# --- Backend -----------------------------------------------------------------
+# Socle serveur (app.js, config, middlewares, utils, scripts) : Isaac.
+/apps/api/                                 @sun123isa @salem-devs
+/apps/api/src/modules/referentiels/        @sun123isa @salem-devs
+/apps/api/src/modules/recherche/           @salem-devs @JBixx
+/apps/api/src/modules/ressources/          @VicAy007  @salem-devs
+/apps/api/src/modules/books/               @VicAy007  @salem-devs
+/apps/api/test/                            @salem-devs @sun123isa
+/apps/api/test/referentiels.routes.test.js @sun123isa @salem-devs
+/apps/api/test/recherche.routes.test.js    @salem-devs @JBixx
+/apps/api/test/ressources.routes.test.js   @VicAy007  @salem-devs
+
+# --- Base de données : schéma, migrations, seeds (Isaac) ---------------------
+/database/                                 @sun123isa @salem-devs
+
+# --- Dépôt, CI/CD, conventions (Isaac) ---------------------------------------
+/.github/                                  @sun123isa @salem-devs
+/.github/CODEOWNERS                        @sun123isa @JBixx
+/.gitignore                                @sun123isa @salem-devs
+/.gitattributes                            @sun123isa @salem-devs
+/docs/revue-de-code.md                     @salem-devs @JBixx
+
+# --- Documentation -----------------------------------------------------------
+/README.md                                 @JBixx @PSEUDO_GLOIRE @salem-devs

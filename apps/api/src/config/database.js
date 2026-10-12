@@ -1,3 +1,4 @@
+// Responsable : Isaac LELO MAKAYA (socle backend) — relecture : Salem KONGOLO
 import pg from 'pg';
 
 const { Pool } = pg;
@@ -10,8 +11,9 @@ export const pool = new Pool({
 
 
 
-// Test de connexion au démarrage (à supprimer après)
-pool.query('SELECT NOW()', (err, res) => {
+// Vérification de la connexion au démarrage (journal du serveur).
+// Ignoré pendant les tests automatisés (pas de base de données en CI).
+if (process.env.NODE_ENV !== 'test') pool.query('SELECT NOW()', (err, res) => {
   if (err) {
     console.error('❌ Échec connexion PostgreSQL:', err.message);
   } else {

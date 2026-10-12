@@ -1,0 +1,48 @@
+# =============================================================================
+# Déploiement du frontend (apps/web) sur Netlify
+# Le site est une application React (SPA) construite par Vite dans apps/web/dist.
+#
+# AVANT LE PREMIER DÉPLOIEMENT : remplacer « https://API-A-RENSEIGNER.example.com »
+# ci-dessous par l'URL publique de l'API (Render, Railway, VPS…).
+# Les appels /api/* sont relayés vers l'API : le navigateur reste sur la même
+# origine, donc les cookies de session HTTP-only fonctionnent sans réglage CORS.
+# =============================================================================
+
+[build]
+  # Installation à la racine (npm workspaces), puis build du seul frontend.
+  command = "npm run build --workspace=apps/web"
+  publish = "apps/web/dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Frontend branché sur l'API réelle (jamais les données fictives en production).
+  VITE_USE_MOCKS = "false"
+
+# Proxy vers l'API (doit rester AVANT la règle de la SPA).
+[[redirects]]
+  from = "/api/*"
+  to = "https://API-A-RENSEIGNER.example.com/api/:splat"
+  status = 200
+  force = true
+
+# SPA : toute autre URL (/recherche, /livres/…, /formateur…) sert index.html,
+# React Router affiche ensuite la bonne page.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# En-têtes de sécurité de base.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Fichiers de build versionnés par leur empreinte : cache long.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

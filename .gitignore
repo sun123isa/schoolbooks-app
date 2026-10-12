@@ -5,5 +5,7 @@ node_modules/
 dist/
 coverage/
 .DS_Store
-apps/api/uploads/books/*
-!apps/api/uploads/books/.gitkeep
+
+# PDF du catalogue : stockés sur disque, jamais versionnés (droits d'utilisation, BR10).
+apps/api/storage/
+apps/api/uploads/

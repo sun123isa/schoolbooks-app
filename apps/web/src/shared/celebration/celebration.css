@@ -1,0 +1,247 @@
+/* =============================================================================
+   Socle frontend — carte de félicitations et confettis
+   ============================================================================= */
+
+.celebration {
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
+  margin: 0;
+  padding: 16px;
+  font-family: var(--font-heading);
+  background: transparent;
+  border: 0;
+  overflow: hidden;
+}
+
+.celebration[open] {
+  display: grid;
+  place-items: center;
+}
+
+.celebration::backdrop {
+  background: var(--tdb-voile);
+  backdrop-filter: blur(4px);
+}
+
+.celebration__confettis {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.celebration__carte {
+  position: relative;
+  z-index: 1;
+  width: min(440px, 100%);
+  overflow: hidden;
+  text-align: center;
+  background: var(--color-surface);
+  border-radius: 28px;
+  box-shadow: var(--shadow-lg);
+  animation: celebration-entree 520ms var(--ease-spring);
+}
+
+@keyframes celebration-entree {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+}
+
+.celebration__fermer {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  color: var(--color-on-primary);
+  background: var(--color-hover-on-dark);
+  border: 1px solid var(--color-line-on-dark);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.celebration__fermer:focus-visible {
+  outline: 2px solid var(--color-focus-on-dark);
+  outline-offset: 2px;
+}
+
+/* Bandeau vert ondulé + médaille */
+.celebration__bandeau {
+  position: relative;
+  height: 132px;
+  background-color: var(--tdb-sombre);
+  background-image:
+    repeating-radial-gradient(ellipse at 50% 120%, transparent 0 10px, var(--tdb-onde) 11px 12px),
+    radial-gradient(circle at 50% 100%, var(--tdb-lueur), transparent 70%);
+}
+
+.celebration__medaille {
+  position: absolute;
+  bottom: -44px;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  font-size: 44px;
+  color: var(--color-on-primary);
+  background: var(--tdb-degrade);
+  border: 6px solid var(--color-surface);
+  border-radius: 50%;
+  box-shadow: 0 0 0 10px var(--halo-doux), var(--shadow-md);
+  transform: translateX(-50%);
+  animation: celebration-medaille 900ms var(--ease-spring) 200ms both;
+}
+
+@keyframes celebration-medaille {
+  from {
+    transform: translateX(-50%) scale(0) rotate(-30deg);
+  }
+}
+
+.celebration__etincelle {
+  position: absolute;
+  color: var(--auth-jaune);
+  animation: celebration-scintille 1.6s ease-in-out infinite;
+}
+
+.celebration__etincelle--1 {
+  top: 22px;
+  left: 22%;
+  font-size: 22px;
+}
+
+.celebration__etincelle--2 {
+  top: 54px;
+  right: 20%;
+  font-size: 16px;
+  color: var(--color-accent);
+  animation-delay: -0.5s;
+}
+
+.celebration__etincelle--3 {
+  top: 18px;
+  right: 34%;
+  font-size: 12px;
+  color: var(--auth-cyan);
+  animation-delay: -1s;
+}
+
+@keyframes celebration-scintille {
+  50% {
+    opacity: 0.35;
+    transform: scale(0.6) rotate(45deg);
+  }
+}
+
+.celebration__corps {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 62px 28px 28px;
+}
+
+.celebration__surtitre {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tdb-vert);
+}
+
+.celebration__titre {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--auth-bleu-nuit);
+}
+
+.celebration__message {
+  max-width: 34ch;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.celebration__element {
+  max-width: 100%;
+  margin: 4px 0 0;
+  padding: 8px 14px;
+  overflow: hidden;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--tdb-vert-fonce);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-pill);
+}
+
+.celebration__actions {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  margin-top: 14px;
+}
+
+.celebration__bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--tdb-vert-fonce);
+  text-decoration: none;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.celebration__bouton:hover {
+  background: var(--color-bg-alt);
+}
+
+.celebration__bouton--principal {
+  color: var(--color-on-primary);
+  background: var(--tdb-degrade-bouton);
+  border: 0;
+}
+
+.celebration__bouton--principal:hover {
+  background: var(--tdb-degrade-bouton);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-primary);
+}
+
+.celebration__bouton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebration__carte,
+  .celebration__medaille,
+  .celebration__etincelle {
+    animation: none;
+  }
+}

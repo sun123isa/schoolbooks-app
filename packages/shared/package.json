@@ -1,0 +1,25 @@
+{
+  "name": "@schoolbooks/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Contrat d'API partagé entre apps/web et apps/api : schémas Zod, codes d'erreur, routes et données fictives.",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./mocks": "./src/mocks/index.js"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "vitest": "^5.0.3"
+  }
+}

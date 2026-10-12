@@ -1,0 +1,49 @@
+/* Socle frontend — panneau « document réservé aux inscrits » (à la place de la visionneuse). */
+
+.acces-reserve {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  min-height: 420px;
+  align-content: center;
+  padding: clamp(28px, 5vw, 56px) 24px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, var(--color-primary-soft), transparent 70%),
+    var(--color-bg-alt);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+}
+
+.acces-reserve__icone {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  font-size: 34px;
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+}
+
+.acces-reserve__titre {
+  margin: 6px 0 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  color: var(--color-text);
+}
+
+.acces-reserve__texte {
+  max-width: 46ch;
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.acces-reserve__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}

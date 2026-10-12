@@ -1,102 +1,47 @@
-import multer from 'multer';
+// Responsable : Isaac LELO MAKAYA (socle backend) — relecture : Salem KONGOLO
+// Format de sortie : ApiErrorSchema (@schoolbooks/shared).
+// Middleware centralisé pour gérer les erreurs dans toute l'API.
+// Il évite de répéter try/catch + res.status dans chaque contrôleur.
+import { ERROR_CODES } from '@schoolbooks/shared';
+import { env } from '../config/env.js';
 
 export function errorMiddleware(err, req, res, next) {
-  // Affiche l'erreur complète dans le terminal pendant le développement.
-  console.error('Erreur API:', err);
+  // Si l'erreur a déjà un statut HTTP, on l'utilise.
+  const status = err.status || err.statusCode || 500;
+  const inattendue = status >= 500;
 
-  // Si les en-têtes ont déjà été envoyés, Express doit terminer le traitement.
+  // Les erreurs inattendues sont journalisées (sauf pendant les tests automatisés).
+  if (env.nodeEnv !== 'test' && inattendue) {
+    console.error('Erreur API:', err);
+  }
+
+  // Une réponse a déjà commencé (flux de fichier interrompu) : on ne peut plus
+  // envoyer de JSON, Express se charge de couper la connexion.
   if (res.headersSent) {
     return next(err);
   }
 
-  // Gestion des erreurs liées à Multer.
-  if (err instanceof multer.MulterError) {
-    // Le fichier dépasse la taille maximale autorisée.
-    if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({
-        success: false,
-        error: {
-          message: 'Le fichier dépasse la taille maximale autorisée.',
-          code: 'FILE_TOO_LARGE'
-        }
-      });
-    }
+  let code = err.code || ERROR_CODES.INTERNAL_ERROR;
+  let message = err.message || 'Erreur interne du serveur';
 
-    // Autre erreur d'upload générée par Multer.
-    return res.status(400).json({
-      success: false,
-      error: {
-        message: "Erreur lors de l'upload du fichier.",
-        code: err.code || 'UPLOAD_ERROR'
-      }
-    });
+  if (err.type === 'entity.parse.failed') {
+    // Corps JSON mal formé (express.json).
+    code = ERROR_CODES.VALIDATION_ERROR;
+    message = 'Corps de requête JSON invalide';
+  } else if (inattendue) {
+    // Jamais de code système (ENOENT, ECONNREFUSED...) ni de détail technique
+    // côté client ; en production, le message est générique.
+    code = ERROR_CODES.INTERNAL_ERROR;
+    if (env.nodeEnv === 'production') message = 'Erreur interne du serveur';
   }
 
-  // Erreur générée par notre filtre de fichiers.
-  if (err.code === 'INVALID_FILE_TYPE') {
-    return res.status(400).json({
-      success: false,
-      error: {
-        message: 'Seuls les fichiers PDF sont autorisés.',
-        code: 'INVALID_FILE_TYPE'
-      }
-    });
-  }
-
-  // Violation d'une contrainte UNIQUE PostgreSQL.
-  if (err.code === '23505') {
-    return res.status(409).json({
-      success: false,
-      error: {
-        message: 'Une donnée identique existe déjà.',
-        code: 'DUPLICATE_RESOURCE'
-      }
-    });
-  }
-
-  // Violation d'une clé étrangère PostgreSQL.
-  if (err.code === '23503') {
-    return res.status(400).json({
-      success: false,
-      error: {
-        message: 'La référence vers une ressource inexistante est interdite.',
-        code: 'INVALID_REFERENCE'
-      }
-    });
-  }
-
-  // Erreur PostgreSQL de valeur invalide.
-  if (err.code === '22P02') {
-    return res.status(400).json({
-      success: false,
-      error: {
-        message: 'Une valeur envoyée est invalide.',
-        code: 'INVALID_VALUE'
-      }
-    });
-  }
-
-  // Statut HTTP personnalisé ou erreur serveur par défaut.
-  const status = err.status || err.statusCode || 500;
-
-  // Ne pas exposer les détails techniques en production.
-  const message =
-    status >= 500
-      ? 'Une erreur interne est survenue.'
-      : err.message || 'Une erreur est survenue.';
-
-  const response = {
+  res.status(status).json({
     success: false,
     error: {
+      code,
       message,
-      code: err.code || 'INTERNAL_ERROR'
+      // Détails de validation ({ champ, message }[]) quand ils existent.
+      ...(Array.isArray(err.details) ? { details: err.details } : {})
     }
-  };
-
-  // Les détails sont utiles pour les erreurs de validation.
-  if (err.details) {
-    response.error.details = err.details;
-  }
-
-  res.status(status).json(response);
+  });
 }

@@ -1,0 +1,8 @@
+# Fins de ligne normalisées (LF dans le dépôt), quel que soit l'OS du développeur.
+* text=auto eol=lf
+
+# Fichiers binaires : jamais de conversion (un PDF modifié devient illisible).
+*.pdf binary
+*.png binary
+*.jpg binary
+*.ico binary
