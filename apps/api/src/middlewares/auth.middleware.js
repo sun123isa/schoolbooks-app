@@ -21,7 +21,7 @@ async function chargerUtilisateur(req) {
   return obtenirUtilisateur(charge.role, charge.sub);
 }
 
-export async function authentifier(req, res, next) {
+export async function requireAuth(req, res, next) {
   const utilisateur = await chargerUtilisateur(req);
   if (!utilisateur) return next(nonAuthentifie());
   req.utilisateur = utilisateur;

@@ -1,53 +1,104 @@
-// =============================================================================
-// Socle backend — application Express
-// Responsable : Isaac LELO MAKAYA — relecture : Salem KONGOLO
-// Périmètre : middlewares globaux et montage des modules. Chaque module (dossier
-// src/modules/<domaine>) expose un routeur ; un développeur n'ajoute ici qu'une
-// ligne app.use(...) pour son module, ce qui limite les conflits de merge.
-// =============================================================================
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { env } from './config/env.js';
+
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+
+
+
 import { errorMiddleware } from './middlewares/error.middleware.js';
-import { notFoundMiddleware } from './middlewares/not-found.middleware.js';
-import authRoutes from './modules/auth/auth.routes.js';
-import booksRoutes, { uploadsRouter } from './modules/books/books.routes.js';
-import referentielsRoutes from './modules/referentiels/referentiels.routes.js';
-import rechercheRoutes from './modules/recherche/recherche.routes.js';
-import ressourcesRoutes from './modules/ressources/ressources.routes.js';
+import cookieParser from 'cookie-parser';
+import booksRoutes from './routes/books.routes.js';
+import schoolLevelsRoutes from './routes/levels.routes.js';
+import subjectsRoutes from './routes/subjects.routes.js';
+import learnersRoutes from './routes/learners.routes.js';
+import trainersRoutes from './routes/trainers.routes.js';
+import authRoutes from './routes/auth.routes.js';
+import profileRoutes from './routes/profile.routes.js';
 
 const app = express();
 
-// Middleware de sécurité : ajoute des en-têtes HTTP protecteurs. Si le frontend
-// appelle l'API depuis un autre domaine (COOKIE_SAMESITE=none), les PDF doivent
-// pouvoir être lus par cette autre origine (Cross-Origin-Resource-Policy).
+const currentFile =
+  fileURLToPath(import.meta.url);
+
+const currentDirectory =
+  path.dirname(currentFile);
+
+const uploadsBooksDirectory =
+  path.resolve(
+    currentDirectory,
+    '../uploads/books'
+  );
+
+if (
+  !fs.existsSync(
+    uploadsBooksDirectory
+  )
+) {
+  fs.mkdirSync(
+    uploadsBooksDirectory,
+    {
+      recursive: true
+    }
+  );
+}
+
+app.use(
+  '/api/uploads/books',
+  express.static(
+    uploadsBooksDirectory,
+    {
+      index: false,
+      setHeaders: (res) => {
+        res.setHeader(
+          'Content-Type',
+          'application/pdf'
+        );
+
+        res.setHeader(
+          'Content-Disposition',
+          'inline'
+        );
+      }
+    }
+  )
+);
+
+// Middleware de sécurité : ajoute des en-têtes HTTP protecteurs.
 app.use(
   helmet({
-    crossOriginResourcePolicy: { policy: env.cookieSameSite === 'none' ? 'cross-origin' : 'same-origin' }
+    crossOriginResourcePolicy: false
   })
 );
 
-// Middleware CORS : seul le frontend (CLIENT_URL, plusieurs origines séparées
-// par des virgules) peut appeler l'API depuis un navigateur. En développement,
-// le proxy Vite rend les appels same-origin : CORS n'intervient pas.
-// credentials : les cookies de session (HTTP-only) accompagnent les requêtes.
+// Middleware CORS : autorise le frontend React à appeler l'API.
 app.use(
-  cors({ origin: env.clientUrls, credentials: true, methods: ['GET', 'HEAD', 'POST', 'PATCH', 'DELETE'] })
+  cors({
+    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    credentials: true
+  })
 );
 
-// Derrière un proxy (production), req.ip doit être l'IP du client (limitation de débit).
-app.set('trust proxy', 1);
 
-// Middleware pour parser le JSON des requêtes (corps limité).
-app.use(express.json({ limit: '100kb' }));
+
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
+
+// Middleware pour parser le JSON des requêtes.
+app.use(express.json());
 
 // Logger HTTP : affiche les requêtes dans le terminal en développement.
-if (process.env.NODE_ENV !== 'test') {
-  app.use(morgan('dev'));
-}
+app.use(morgan('dev'));
 
+
+app.use(cookieParser());
 // Routes publiques de test.
 app.get('/api/health', (req, res) => {
   res.json({
@@ -56,26 +107,27 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Référentiels — Isaac LELO MAKAYA : /api/niveaux, /api/matieres, /api/annees, /api/types-documents
-app.use('/api', referentielsRoutes);
-
-// Recherche — Salem KONGOLO : GET /api/ressources (doit rester AVANT le module ressources)
-app.use('/api/ressources', rechercheRoutes);
-
-// Ressources et fichiers — Emmanuel AYA : GET /api/ressources/:id[/fichier|/telechargement]
-app.use('/api/ressources', ressourcesRoutes);
-
-// Comptes : inscription, connexion, refresh token, session, déconnexion.
+// Routes Metiers.
 app.use('/api/auth', authRoutes);
-
-// Livres des formateurs : catalogue, fiche, téléchargement, espace formateur.
 app.use('/api/books', booksRoutes);
+app.use('/api/niveaux', schoolLevelsRoutes);
+app.use('/api/matieres', subjectsRoutes);
+app.use('/api/learners', learnersRoutes);
+app.use('/api/trainers', trainersRoutes);
+app.use('/api/profile', profileRoutes);
 
-// Lecture des PDF envoyés par les formateurs (contrôlée, jamais statique).
-app.use('/api/uploads/books', uploadsRouter);
 
-// Route inconnue : 404 au format d'erreur commun.
-app.use('/api', notFoundMiddleware);
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: {
+      message: 'Route introuvable',
+      code: 'ROUTE_NOT_FOUND'
+    }
+  });
+});
+
 
 // Middleware de gestion des erreurs (doit être après les routes).
 app.use(errorMiddleware);

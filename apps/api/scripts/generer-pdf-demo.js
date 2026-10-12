@@ -75,7 +75,7 @@ async function main() {
     const titre = path.basename(chemin, '.pdf').replace(/-/g, ' ');
     await fs.writeFile(
       destination,
-      creerPdf(['Schoolbooks - document de demonstration', titre, 'Contenu fictif genere pour le developpement.'])
+      creerPdf(['schoolbooks - document de demonstration', titre, 'Contenu fictif genere pour le developpement.'])
     );
     console.log(`PDF créé : ${destination}`);
   }
